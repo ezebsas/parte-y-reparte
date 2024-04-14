@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  app-server:
+    container_name: backend
+    image: backend-img
+    build: .
+    ports:
+      - "8080:8080"
