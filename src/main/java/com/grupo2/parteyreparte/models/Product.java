@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 public class Product {
 
+    @Getter
     private String id;
     private String name;
     private String image;
@@ -26,7 +27,6 @@ public class Product {
         this.name = name;
         this.image = image;
         this.link = "";
-        this.deadline = deadline;
         this.maxPeople = maxPeople;
         this.minPeople = minPeople;
         this.totalCost = totalCost;
@@ -36,5 +36,21 @@ public class Product {
 
     public void partReceived() {
         //TODO
+    }
+
+    public boolean isFull() {
+            return this.suscribers.size() >= this.maxPeople;
+        }
+
+    public void suscribeUser(User user) {
+        this.suscribers.add(user);
+    }
+
+    public void close() {
+        this.state = ProductState.CLOSED;
+    }
+
+    public void desuscribeUser(User user) {
+        this.suscribers.remove(user);
     }
 }

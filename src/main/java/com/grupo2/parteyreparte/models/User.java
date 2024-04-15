@@ -1,5 +1,7 @@
 package com.grupo2.parteyreparte.models;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
