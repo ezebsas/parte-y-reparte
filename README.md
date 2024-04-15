@@ -1,4 +1,4 @@
-# TACS_wololo
+# TACS parte y reparte
 
 _Trabajo practico de desarrollo de un sistema para comprar productos colaborativamente_
 
