@@ -2,6 +2,7 @@ package com.grupo2.parteyreparte.controllers;
 
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.UserMapper;
+import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.services.UserService;
@@ -47,5 +48,10 @@ public class UserController {
         }else
             return ResponseEntity.badRequest().build();
 
+    }
+
+    @GetMapping("/users/me/notifications")
+    public ResponseEntity<List<Notification>> getCurrentUserNotifications(){
+        return ResponseEntity.ok(userService.getLoggedUserNotifications());
     }
 }
