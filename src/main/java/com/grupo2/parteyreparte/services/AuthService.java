@@ -33,7 +33,9 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                         .productsPublished(new ArrayList<>())
-                        .productsSubscribed(new ArrayList<>()).build();
+                        .productsSubscribed(new ArrayList<>())
+                        .notifications(new ArrayList<>())
+                        .build();
 
         userRepository.save(user);
 

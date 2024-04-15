@@ -21,15 +21,17 @@ public class User implements UserDetails {
     private String password;
     private List<Product> productsPublished;
     private List<Product> productsSubscribed;
+    private List<Notification> notifications;
 
 
-    public User(String id, String name, int age, String email, List<Product> productsPublished, List<Product> productsSubscribed) {
+    public User(String id, String name, int age, String email, List<Product> productsPublished, List<Product> productsSubscribed, List<Notification> notifications) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
         this.productsPublished = new ArrayList<Product>();
         this.productsSubscribed = new ArrayList<Product>();
+        this.notifications = new ArrayList<Notification>();
     }
 
     @Override
@@ -67,5 +69,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void notifyClosedProduct(Notification notification) {
+        this.notifications.add(notification);
     }
 }

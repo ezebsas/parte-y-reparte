@@ -3,6 +3,7 @@ package com.grupo2.parteyreparte.models;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,13 +45,24 @@ public class Product {
 
     public void suscribeUser(User user) {
         this.suscribers.add(user);
+
+        if (this.isFull()) {
+            this.state = ProductState.CLOSED;
+        }
     }
 
     public void close() {
-        this.state = ProductState.CLOSED;
+        this.notifyUsers();
+        if (this.suscribers.size() < this.minPeople) {
+            this.state = ProductState.INCOMPLETED;
+        } else {
+            this.state = ProductState.CLOSED;
+        }
     }
 
-    public void desuscribeUser(User user) {
-        this.suscribers.remove(user);
+    private void notifyUsers() {
+        Notification notification = new Notification("Product closed", "The product " + this.name + " has been closed", LocalDate.now());
+        this.suscribers.forEach(user -> user.notifyClosedProduct(notification));
     }
+
 }

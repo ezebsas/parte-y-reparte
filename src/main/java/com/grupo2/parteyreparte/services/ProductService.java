@@ -1,5 +1,7 @@
 package com.grupo2.parteyreparte.services;
 
+import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
+import com.grupo2.parteyreparte.exceptions.ProductFullException;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.ProductRepository;
@@ -17,9 +19,13 @@ public class ProductService {
         private static final String PRODUCT_IS_FULL = "Product is full";
 
     private final ProductRepository productRepository;
+    private final UserService userService;
 
+
+    @Autowired
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
+        this.userService = new UserService();
     }
 
     public List<Product> getAll() {
@@ -41,27 +47,23 @@ public class ProductService {
 
     public Product getProductById(String id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST));
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST));
     }
 
     public Product updateProduct(String id, Product product) {
         boolean exists = productRepository.existsById(id);
 
         if (!exists) {
-            throw new NoSuchElementException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST);
+            throw new EntityNotFoundException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST);
         }
 
         return this.productRepository.update(id, product);
     }
 
     public Product patchProduct(String id, Product product) {
-        boolean exists = productRepository.existsById(id);
 
-        if (!exists) {
-            throw new NoSuchElementException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST);
-        }
-
-        Product existingProduct = this.productRepository.findById(id).get();
+        Product existingProduct = this.productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST));
 
         if (product.getName() != null) {
             existingProduct.setName(product.getName());
@@ -104,18 +106,14 @@ public class ProductService {
         return this.productRepository.update(id, existingProduct);
     }
 
-    public Product subscribeUser(String productId, String userId) {
-        Product product = getProductById(productId);
-        /*
-        User user = userService.getUserById(userId);
-        */
-
-        User user = new User(userId, "name", 21, "email", null);
+    public Product subscribeLoggedUser(String productId) {
+        Product product = this.getProductById(productId);
 
         if (product.isFull()) {
-            throw new IllegalStateException(PRODUCT_IS_FULL);
+            throw new ProductFullException(PRODUCT_IS_FULL);
         }
 
+        User user = userService.getLoggedUser();
         product.suscribeUser(user);
 
         this.productRepository.update(productId, product);
@@ -123,12 +121,12 @@ public class ProductService {
     }
 
     public List<User> getParticipants(String id) {
-        Product product = getProductById(id);
+        Product product = this.getProductById(id);
         return product.getSuscribers();
     }
 
     public Product closeProduct(String id) {
-        Product product = getProductById(id);
+        Product product = this.getProductById(id);
         product.close();
         this.productRepository.update(id, product);
         return product;

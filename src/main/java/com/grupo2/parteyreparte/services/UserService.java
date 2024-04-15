@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.services;
 
+import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,5 +38,9 @@ public class UserService {
 
         return hasProductId;
 
+    }
+
+    public List<Notification> getLoggedUserNotifications() {
+        return this.getLoggedUser().getNotifications();
     }
 }

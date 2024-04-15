@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.repositories;
 
+import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.models.Product;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +36,9 @@ public class ProductRepository {
     }
 
     public Product update(String id, Product product) {
-        Product oldProduct = this.findById(id).get();
+        Product oldProduct = this.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product with id = " + id + " does not exist"));
+
         product.setId(id);
         this.productList.remove(oldProduct);
         this.productList.add(product);
