@@ -19,14 +19,17 @@ public class User implements UserDetails {
     private int age;
     private String email;
     private String password;
-    private List<Product> productList;
+    private List<Product> productsPublished;
+    private List<Product> productsSubscribed;
 
-    public User(String id, String name, int age, String email, List<Product> productList) {
+
+    public User(String id, String name, int age, String email, List<Product> productsPublished, List<Product> productsSubscribed) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;
-        this.productList = new ArrayList<Product>();
+        this.productsPublished = new ArrayList<Product>();
+        this.productsSubscribed = new ArrayList<Product>();
     }
 
     @Override

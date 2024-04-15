@@ -32,7 +32,8 @@ public class AuthService {
                 .age(request.getAge())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                        .productList(new ArrayList<>()).build();
+                        .productsPublished(new ArrayList<>())
+                        .productsSubscribed(new ArrayList<>()).build();
 
         userRepository.save(user);
 
