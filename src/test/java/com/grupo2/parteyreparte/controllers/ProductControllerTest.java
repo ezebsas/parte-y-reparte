@@ -65,7 +65,7 @@ class ProductControllerTest {
                     "state": "OPEN"}""";
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/products").content(product)
+                .post("/api/v1/products").content(product)
                         .contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
