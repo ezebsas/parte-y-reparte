@@ -70,4 +70,14 @@ class ProductControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
     }
+    @Test
+    public void SE_RECIBE_200_CUANDO_SE_CONSULTAN_LOS_PRODUCTOS() throws Exception {
+
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/v1/products")
+                        .contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
 }
