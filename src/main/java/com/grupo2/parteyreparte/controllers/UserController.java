@@ -2,6 +2,7 @@ package com.grupo2.parteyreparte.controllers;
 
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
+import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
@@ -32,10 +33,14 @@ public class UserController {
 
     @PatchMapping("users/me")
     public ResponseEntity<UserDTO> patchCurrentUser(@RequestBody UserDTO userUpdate){
-
-        //updatear user
-        return ResponseEntity.ok(userUpdate);
+        try {
+            UserDTO updatedUser = userService.updateUser(userUpdate);
+            return ResponseEntity.ok(updatedUser);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 
     @GetMapping("/users/me/subscriptions")
     public ResponseEntity<List<ProductDTO>> getCurrentUserProducts(){
