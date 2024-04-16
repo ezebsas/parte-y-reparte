@@ -5,28 +5,18 @@ import com.grupo2.parteyreparte.models.ProductState;
 import com.grupo2.parteyreparte.models.User;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class StatsRepository {
 
-    protected List<Product> products = new ArrayList<>();
-    protected List<User> users = new ArrayList<>();
+    private Set<Integer> uniqueUsersId = new HashSet<>();
 
-
-    public List<Product> findAllPublications(){
-        products.add(new Product("Prod 1", "a", 5, 3, 1000.0));
-        products.add(new Product("Prod 2", "b", 5, 3, 112400.0));
-
-        return products;
+    public void addInteraction(Integer id){
+        uniqueUsersId.add(id);
     }
 
-    public List<User> findAllUsers(){
-        users.add(new User("a", 5, "as"));
-        users.add(new User("a", 5, "as"));
-
-        return users;
+    public int uniqueUsers(){
+        return uniqueUsersId.size();
     }
 }
