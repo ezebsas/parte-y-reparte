@@ -23,6 +23,7 @@ public class ProductRepository {
     }
 
     public Product createProduct(Product product) {
+        product.setId(String.valueOf(this.productList.size() + 1));
         this.productList.add(product);
         return product;
     }

@@ -40,9 +40,7 @@ public class ProductService {
             throw new IllegalArgumentException(PRODUCT_WITH_ID + product.getId() + ALREADY_EXISTS);
         }
 
-        this.productRepository.createProduct(product);
-
-        return product;
+        return this.productRepository.createProduct(product);
     }
 
     public Product getProductById(String id) {
