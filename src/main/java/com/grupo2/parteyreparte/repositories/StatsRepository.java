@@ -24,8 +24,8 @@ public class StatsRepository {
     }
 
     public List<User> findAllUsers(){
-        users.add(new User("U 1", "a", 5, "as", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()) );
-        users.add(new User("U 2", "a", 5, "as", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()) );
+        users.add(new User("a", 5, "as"));
+        users.add(new User("a", 5, "as"));
 
         return users;
     }

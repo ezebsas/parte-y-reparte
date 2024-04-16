@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-
     private final ProductMapper productMapper;
 
     @Autowired
@@ -23,10 +22,9 @@ public class UserService {
         this.productMapper = productMapper;
     }
 
-    public String getLoggedUserId() {
+    public int getLoggedUserId() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
-
     }
 
     public User getLoggedUser() {

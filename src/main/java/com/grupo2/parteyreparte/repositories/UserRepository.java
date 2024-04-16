@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Repository
 public class UserRepository {
@@ -19,8 +20,12 @@ public class UserRepository {
 
 
     public void save(User user) {
-        // TODO luego de implementar repositorios esto vuela y se genera solo el id
-        user.setId(user.getEmail());
+
+        // TODO futuramente se va a cambiar
+        if (user.getId() == 0) {
+            user.setId(new Random().nextInt(999999));
+        }
+
         this.users.add(user);
     }
 }

@@ -3,17 +3,20 @@ package com.grupo2.parteyreparte.services;
 import com.grupo2.parteyreparte.dtos.AuthRequestDTO;
 import com.grupo2.parteyreparte.dtos.AuthResponseDTO;
 import com.grupo2.parteyreparte.dtos.RegisterRequestDTO;
-import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
+import com.grupo2.parteyreparte.exceptions.AuthException;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.UserRepository;
 import com.grupo2.parteyreparte.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +28,20 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
 
+    /***
+     *
+     * @param request that have the data of the user
+     * @return AuthResponseDTO with the token if the register was success
+     * @throws AuthException when the user already exist
+     */
     public AuthResponseDTO register(RegisterRequestDTO request) {
+
+
+        if (userRepository.findByUsername(request.getEmail()).isPresent()) {
+            throw new AuthException("User already exist");
+        }
+
+        this.validatePassword(request.getPassword());
 
         User user = User.builder()
                 .name(request.getName())
@@ -44,16 +60,43 @@ public class AuthService {
         return new AuthResponseDTO(jwtToken);
     }
 
+    /***
+     *
+     * @param request that have the data of the user
+     * @return AuthResponseDTO with the token if the login was success
+     * @throws AuthException when the user doesn't exist
+     */
     public AuthResponseDTO login(AuthRequestDTO request) {
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+        } catch (AuthenticationException e) {
+            throw new AuthException("Wrong password or username");
+        }
 
-        User user = userRepository.findByUsername(request.getEmail()).orElseThrow(() -> new EntityNotFoundException("Username or password wrong"));
+
+        User user = userRepository.findByUsername(request.getEmail()).orElseThrow(() -> new AuthException("Username doesn't exist"));
 
         String jwtToken = jwtService.generateToken(user);
 
         return new AuthResponseDTO(jwtToken);
+    }
+
+    /***
+     *
+     * @param password
+     * @throws AuthException when the password doesn't have the minimum length of 5 or alphamumeric characters
+     */
+    private void validatePassword(String password) {
+
+        String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(password);
+
+        if ( !matcher.matches()) {
+            throw new AuthException("Password must have alphanumeric characters and a minimum length of 5");
+        }
     }
 }
