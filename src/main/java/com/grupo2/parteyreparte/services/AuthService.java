@@ -10,6 +10,7 @@ import com.grupo2.parteyreparte.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -67,9 +68,14 @@ public class AuthService {
      */
     public AuthResponseDTO login(AuthRequestDTO request) {
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+        } catch (AuthenticationException e) {
+            throw new AuthException("Wrong password or username");
+        }
+
 
         User user = userRepository.findByUsername(request.getEmail()).orElseThrow(() -> new AuthException("Username doesn't exist"));
 
