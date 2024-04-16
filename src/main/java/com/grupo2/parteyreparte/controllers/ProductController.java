@@ -1,5 +1,7 @@
 package com.grupo2.parteyreparte.controllers;
 
+import com.grupo2.parteyreparte.dtos.ProductDTO;
+import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
@@ -26,17 +28,17 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Product>> getAll() {
+    public ResponseEntity<List<ProductDTO>> getAll() {
 
-        List<Product> products = productService.getAll();
+        List<ProductDTO> products = productService.getAll();
 
         return ResponseEntity.ok(products);
     }
 
     @PostMapping("")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody Product product) {
         try {
-            Product createdProduct = productService.createProduct(product);
+            ProductDTO createdProduct = productService.createProduct(product);
             return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
@@ -45,9 +47,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id) {
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable String id) {
         try {
-            Product product = productService.getProductById(id);
+            ProductDTO product = productService.getProductDTOById(id);
             return ResponseEntity.ok(product);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -55,9 +57,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product product) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable String id, @RequestBody Product product) {
         try {
-            Product updatedProduct = productService.updateProduct(id, product);
+            ProductDTO updatedProduct = productService.updateProduct(id, product);
             return ResponseEntity.ok(updatedProduct);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -65,9 +67,9 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Product> patchProduct(@PathVariable String id, @RequestBody Product product) {
+    public ResponseEntity<ProductDTO> patchProduct(@PathVariable String id, @RequestBody Product product) {
         try {
-            Product updatedProduct = productService.patchProduct(id, product);
+            ProductDTO updatedProduct = productService.patchProduct(id, product);
             return ResponseEntity.ok(updatedProduct);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -75,9 +77,9 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/subscription")
-    public ResponseEntity<Product> subscribeUser(@PathVariable String id) {
+    public ResponseEntity<ProductDTO> subscribeUser(@PathVariable String id) {
         try {
-            Product product = productService.subscribeLoggedUser(id);
+            ProductDTO product = productService.subscribeLoggedUser(id);
             return ResponseEntity.ok(product);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -85,9 +87,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}/participants")
-    public ResponseEntity<List<User>> getParticipants(@PathVariable String id) {
+    public ResponseEntity<List<UserDTO>> getParticipants(@PathVariable String id) {
         try {
-            List<User> participants = productService.getParticipants(id);
+            List<UserDTO> participants = productService.getParticipants(id);
             return ResponseEntity.ok(participants);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -95,9 +97,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}/close")
-    public ResponseEntity<Product> closeProduct(@PathVariable String id) {
+    public ResponseEntity<ProductDTO> closeProduct(@PathVariable String id) {
         try {
-            Product product = productService.closeProduct(id);
+            ProductDTO product = productService.closeProduct(id);
             return ResponseEntity.ok(product);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

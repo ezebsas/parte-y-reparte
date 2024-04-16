@@ -1,7 +1,11 @@
 package com.grupo2.parteyreparte.services;
 
+import com.grupo2.parteyreparte.dtos.ProductDTO;
+import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.exceptions.ProductFullException;
+import com.grupo2.parteyreparte.mappers.ProductMapper;
+import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.ProductRepository;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -20,27 +25,42 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final UserService userService;
+    private final ProductMapper productMapper;
+    private final UserMapper  userMapper;
 
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, UserMapper userMapper, UserService userService) {
         this.productRepository = productRepository;
-        this.userService = new UserService();
+        this.productMapper = productMapper;
+        this.userMapper = userMapper;
+        this.userService = userService;
     }
 
-    public List<Product> getAll() {
+    public List<ProductDTO> getAll() {
 
-        return this.productRepository.getAll();
+        return this.productRepository.getAll().stream().map(this.productMapper::mapToProductDTO).collect(Collectors.toList());
+
     }
 
-    public Product createProduct(Product product) {
+    public ProductDTO createProduct(Product product) {
         boolean exists = product.getId() != null && productRepository.existsById(product.getId());
 
         if (exists) {
             throw new IllegalArgumentException(PRODUCT_WITH_ID + product.getId() + ALREADY_EXISTS);
         }
 
-        return this.productRepository.createProduct(product);
+        Product productCreated = this.productRepository.createProduct(product);
+
+        User loggedUser = this.userService.getLoggedUser();
+        loggedUser.publishProduct(productCreated);
+
+        return this.productMapper.mapToProductDTO(productCreated);
+    }
+
+    public ProductDTO getProductDTOById(String id) {
+        return productRepository.findById(id).map(this.productMapper::mapToProductDTO)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST));
     }
 
     public Product getProductById(String id) {
@@ -48,17 +68,17 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST));
     }
 
-    public Product updateProduct(String id, Product product) {
+    public ProductDTO updateProduct(String id, Product product) {
         boolean exists = productRepository.existsById(id);
 
         if (!exists) {
             throw new EntityNotFoundException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST);
         }
 
-        return this.productRepository.update(id, product);
+        return this.productMapper.mapToProductDTO(this.productRepository.update(id, product));
     }
 
-    public Product patchProduct(String id, Product product) {
+    public ProductDTO patchProduct(String id, Product product) {
 
         Product existingProduct = this.productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST));
@@ -101,10 +121,10 @@ public class ProductService {
             existingProduct.setState(product.getState());
         }
 
-        return this.productRepository.update(id, existingProduct);
+        return this.productMapper.mapToProductDTO(this.productRepository.update(id, existingProduct));
     }
 
-    public Product subscribeLoggedUser(String productId) {
+    public ProductDTO subscribeLoggedUser(String productId) {
         Product product = this.getProductById(productId);
 
         if (product.isFull()) {
@@ -113,20 +133,21 @@ public class ProductService {
 
         User user = userService.getLoggedUser();
         product.suscribeUser(user);
+        user.susbribeProduct(product);
 
         this.productRepository.update(productId, product);
-        return product;
+        return this.productMapper.mapToProductDTO(product);
     }
 
-    public List<User> getParticipants(String id) {
+    public List<UserDTO> getParticipants(String id) {
         Product product = this.getProductById(id);
-        return product.getSuscribers();
+        return product.getSuscribers().stream().map(this.userMapper::mapToUserDTO).collect(Collectors.toList());
     }
 
-    public Product closeProduct(String id) {
+    public ProductDTO closeProduct(String id) {
         Product product = this.getProductById(id);
         product.close();
         this.productRepository.update(id, product);
-        return product;
+        return this.productMapper.mapToProductDTO(product);
     }
 }

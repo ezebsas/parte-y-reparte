@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.controllers;
 
+import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Notification;
@@ -37,14 +38,14 @@ public class UserController {
     }
 
     @GetMapping("/users/me/subscriptions")
-    public ResponseEntity<List<Product>> getCurrentUserProducts(){
-        return ResponseEntity.ok(userService.getLoggedUserProductsSubscribed());
+    public ResponseEntity<List<ProductDTO>> getCurrentUserProducts(){
+        return ResponseEntity.ok(userService.getLoggedUserProductsSubscribedDTO());
     }
 
     @DeleteMapping("/users/me/subscriptions/{id}")
-    public ResponseEntity<List<Product>> getCurrentUserProducts(@PathVariable("id") String productId){
+    public ResponseEntity<List<ProductDTO>> getCurrentUserProducts(@PathVariable("id") String productId){
         if(userService.deleteUserProductById(productId)){
-            return ResponseEntity.ok(userService.getLoggedUserProductsSubscribed());
+            return ResponseEntity.ok(userService.getLoggedUserProductsSubscribedDTO());
         }else
             return ResponseEntity.badRequest().build();
 
@@ -53,5 +54,10 @@ public class UserController {
     @GetMapping("/users/me/notifications")
     public ResponseEntity<List<Notification>> getCurrentUserNotifications(){
         return ResponseEntity.ok(userService.getLoggedUserNotifications());
+    }
+
+    @GetMapping("/users/me/products")
+    public ResponseEntity<List<ProductDTO>> getCurrentUserProductsPublished(){
+        return ResponseEntity.ok(userService.getLoggedUserProductsPublished());
     }
 }
