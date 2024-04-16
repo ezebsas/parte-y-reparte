@@ -82,7 +82,15 @@ public class User implements UserDetails {
         return true;
     }
 
+    public void publishProduct(Product product) {
+        this.productsPublished.add(product);
+    }
+
     public void notifyClosedProduct(Notification notification) {
         this.notifications.add(notification);
+    }
+
+    public void susbribeProduct(Product product) {
+        this.productsSubscribed.add(product);
     }
 }
