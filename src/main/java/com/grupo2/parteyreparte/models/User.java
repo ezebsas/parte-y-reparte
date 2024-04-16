@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class User implements UserDetails {
 
-    private String id;
+    private int id;
     private String name;
     private int age;
     private String email;
@@ -24,14 +24,25 @@ public class User implements UserDetails {
     private List<Notification> notifications;
 
 
-    public User(String id, String name, int age, String email, List<Product> productsPublished, List<Product> productsSubscribed, List<Notification> notifications) {
-        this.id = id;
+    public User(String name, int age, String email) {
         this.name = name;
         this.age = age;
         this.email = email;
         this.productsPublished = new ArrayList<Product>();
         this.productsSubscribed = new ArrayList<Product>();
         this.notifications = new ArrayList<Notification>();
+    }
+
+    public void addProductPublished(Product product) {
+        this.productsPublished.add(product);
+    }
+
+    public void addProductSuscribed(Product product) {
+        this.productsSubscribed.add(product);
+    }
+
+    public void addNotification(Notification notification) {
+        this.notifications.add(notification);
     }
 
     @Override

@@ -12,10 +12,10 @@ import java.util.List;
 @Service
 public class UserService {
 
-    public String getLoggedUserId() {
+
+    public int getLoggedUserId() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
-
     }
 
     public User getLoggedUser() {
