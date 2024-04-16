@@ -5,7 +5,9 @@ import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
+import com.grupo2.parteyreparte.repositories.StatsRepository;
 import com.grupo2.parteyreparte.services.ProductService;
+import com.grupo2.parteyreparte.services.StatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,9 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @Autowired
+    private StatsService statsService;
+
     @GetMapping("")
     public ResponseEntity<List<ProductDTO>> getAll() {
 
@@ -39,6 +44,7 @@ public class ProductController {
     public ResponseEntity<ProductDTO> createProduct(@RequestBody Product product) {
         try {
             ProductDTO createdProduct = productService.createProduct(product);
+            statsService.addInteraction();
             return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
@@ -80,6 +86,7 @@ public class ProductController {
     public ResponseEntity<ProductDTO> subscribeUser(@PathVariable String id) {
         try {
             ProductDTO product = productService.subscribeLoggedUser(id);
+            statsService.addInteraction();
             return ResponseEntity.ok(product);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
