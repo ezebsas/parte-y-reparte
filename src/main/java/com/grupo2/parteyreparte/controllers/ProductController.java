@@ -42,75 +42,55 @@ public class ProductController {
 
     @PostMapping("")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
-        try {
+
             ProductDTO createdProduct = productService.createProduct(productDTO);
             statsService.addInteraction();
             return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
 
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable String id) {
-        try {
+
             ProductDTO product = productService.getProductDTOById(id);
             return ResponseEntity.ok(product);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
-        try {
+
             ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
             return ResponseEntity.ok(updatedProduct);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ProductDTO> patchProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
-        try {
+
             ProductDTO updatedProduct = productService.patchProduct(id, productDTO);
             return ResponseEntity.ok(updatedProduct);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @PostMapping("/{id}/subscription")
     public ResponseEntity<ProductDTO> subscribeUser(@PathVariable String id) {
-        try {
+
             ProductDTO product = productService.subscribeLoggedUser(id);
             statsService.addInteraction();
             return ResponseEntity.ok(product);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @GetMapping("/{id}/participants")
     public ResponseEntity<List<UserDTO>> getParticipants(@PathVariable String id) {
-        try {
+
             List<UserDTO> participants = productService.getParticipants(id);
             return ResponseEntity.ok(participants);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @PutMapping("/{id}/close")
     public ResponseEntity<ProductDTO> closeProduct(@PathVariable String id) {
-        try {
+
             ProductDTO product = productService.closeProduct(id);
             return ResponseEntity.ok(product);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+
     }
 
 

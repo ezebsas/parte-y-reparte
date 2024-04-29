@@ -44,8 +44,4 @@ public class AuthController {
     }
 
 
-    @ExceptionHandler(value = AuthException.class)
-    public ResponseEntity<ErrorResponseDTO> authExceptionResolver(AuthException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponseDTO(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
-    }
 }

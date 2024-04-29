@@ -34,12 +34,9 @@ public class UserController {
 
     @PatchMapping("users/me")
     public ResponseEntity<UserDTO> patchCurrentUser(@RequestBody UserDTO userUpdate){
-        try {
+
             UserDTO updatedUser = userService.updateUser(userUpdate);
             return ResponseEntity.ok(updatedUser);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
 
@@ -50,11 +47,9 @@ public class UserController {
 
     @DeleteMapping("/users/me/subscriptions/{id}")
     public ResponseEntity<List<ProductDTO>> getCurrentUserProducts(@PathVariable("id") String productId){
-        if(userService.deleteUserProductById(productId)){
-            return ResponseEntity.ok(userService.getLoggedUserProductsSubscribedDTO());
-        }else
-            return ResponseEntity.badRequest().build();
 
+        userService.deleteUserProductById(productId);
+        return ResponseEntity.ok(userService.getLoggedUserProductsSubscribedDTO());
     }
 
     @GetMapping("/users/me/notifications")

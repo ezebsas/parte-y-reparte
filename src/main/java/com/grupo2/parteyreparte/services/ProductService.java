@@ -2,7 +2,6 @@ package com.grupo2.parteyreparte.services;
 
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
-import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.exceptions.ProductFullException;
 import com.grupo2.parteyreparte.exceptions.UnauthorizedOperationException;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
@@ -10,12 +9,10 @@ import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.ProductRepository;
-import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
