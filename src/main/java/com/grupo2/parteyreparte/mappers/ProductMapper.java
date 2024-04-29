@@ -21,12 +21,14 @@ public class ProductMapper {
     }
 
     public ProductDTO mapToProductDTO(Product product){
-        List<UserDTO> suscribers = new ArrayList<UserDTO>();
-        for(User user : product.getSuscribers()){
-            suscribers.add(userMapper.mapToUserDTO(user));
-        }
-
         ProductDTO productDTO = new ProductDTO();
+        List<UserDTO> suscribers = new ArrayList<UserDTO>();
+
+        if (product.getSuscribers() != null) {
+            for (User user : product.getSuscribers()) {
+                suscribers.add(userMapper.mapToUserDTO(user));
+            }
+        }
 
         productDTO.setId(product.getId());
         productDTO.setName(product.getName());
@@ -36,9 +38,36 @@ public class ProductMapper {
         productDTO.setMaxPeople(product.getMaxPeople());
         productDTO.setMinPeople(product.getMinPeople());
         productDTO.setTotalCost(product.getTotalCost());
-        productDTO.setSuscribers(suscribers);
+        productDTO.setSubscribers(suscribers);
         productDTO.setState(product.getState());
 
+        if (product.getOwner() != null) {
+            productDTO.setOwner(userMapper.mapToUserDTO(product.getOwner()));
+        }
+
         return productDTO;
+    }
+
+    public Product mapToProduct(ProductDTO productDTO){
+        List<User> subscribers = new ArrayList<User>();
+        if (productDTO.getSubscribers() != null) {
+            for (UserDTO userDTO : productDTO.getSubscribers()) {
+                subscribers.add(userMapper.mapToUser(userDTO));
+            }
+        }
+
+        Product product = new Product(productDTO.getName(), productDTO.getImage(), productDTO.getMaxPeople(), productDTO.getMinPeople(), productDTO.getTotalCost());
+
+        if (productDTO.getOwner() != null) {
+            product.setOwner(userMapper.mapToUser(productDTO.getOwner()));
+        }
+
+        product.setId(productDTO.getId());
+        product.setLink(productDTO.getLink());
+        product.setDeadline(productDTO.getDeadline());
+        product.setSuscribers(subscribers);
+        product.setState(productDTO.getState());
+
+        return product;
     }
 }

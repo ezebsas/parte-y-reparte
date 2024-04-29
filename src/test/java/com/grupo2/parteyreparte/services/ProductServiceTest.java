@@ -2,6 +2,8 @@ package com.grupo2.parteyreparte.services;
 
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.exceptions.ProductFullException;
+import com.grupo2.parteyreparte.mappers.ProductMapper;
+import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.ProductState;
 import com.grupo2.parteyreparte.models.User;
@@ -31,6 +33,9 @@ class ProductServiceTest {
     @MockBean
     UserService userServiceMock;
 
+    @MockBean
+    ProductMapper productMapperMock;
+
     User userTest;
 
     @BeforeEach
@@ -46,9 +51,12 @@ class ProductServiceTest {
 
         String test_id = "1";
         Product cocaProduct = new Product("Coca","www.dns.a/a.img",3,2,33.2);
+        ProductDTO cocaProductDTO = new ProductDTO("Coca","www.dns.a/a.img",3,2,33.2);
 
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(cocaProduct));
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(cocaProduct);
         Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(cocaProduct);
+
+        Mockito.when(productMapperMock.mapToProduct(cocaProductDTO)).thenReturn(cocaProduct);
 
         Mockito.when(productRepositoryMock.existsById(Mockito.anyString())).thenReturn(false);
         Mockito.doAnswer(invocationOnMock -> {
@@ -57,8 +65,14 @@ class ProductServiceTest {
             return product;
         }).when(productRepositoryMock).createProduct(cocaProduct);
 
+        Mockito.doAnswer(invocationOnMock -> {
+            Product product = (Product) invocationOnMock.getArguments()[0];
+            cocaProductDTO.setId(product.getId());
+            return cocaProductDTO;
+        }).when(productMapperMock).mapToProductDTO(Mockito.any(Product.class));
 
-        ProductDTO productCreated = productService.createProduct(cocaProduct);
+
+        ProductDTO productCreated = productService.createProduct(cocaProductDTO);
 
         assertTrue(productCreated.getId().contains(test_id));
         assertEquals(1,userTest.getProductsPublished().size());
@@ -72,7 +86,7 @@ class ProductServiceTest {
         Product pastaFrolaProduct = new Product(pastFrola,"www.dns.a/a.img",5,2,33.2);
 
         Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(pastaFrolaProduct);
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(pastaFrolaProduct));
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(pastaFrolaProduct);
 
 
         Mockito.when(userServiceMock.getLoggedUser()).thenReturn(userTest);
@@ -94,10 +108,11 @@ class ProductServiceTest {
         subscribers.add(new User("Ernesto",13,"ee@asd.com"));
         subscribers.add(new User("Guille",23,"gg@asd.com"));
         asadoProduct.setSuscribers(subscribers);
+        asadoProduct.setOwner(userTest);
         userTest.setProductsPublished(List.of(asadoProduct));
 
         Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(asadoProduct);
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(asadoProduct));
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(asadoProduct);
 
 
 
@@ -116,10 +131,11 @@ class ProductServiceTest {
         List<User> subscribers = new ArrayList<>();
         subscribers.add(new User("Ernesto",13,"ee@asd.com"));
         packBicisProduct.setSuscribers(subscribers);
+        packBicisProduct.setOwner(userTest);
 
         userTest.setProductsPublished(List.of(packBicisProduct));
         Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(packBicisProduct);
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(packBicisProduct));
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(packBicisProduct);
 
         productService.closeProduct("1");
 
@@ -140,7 +156,7 @@ class ProductServiceTest {
                 Mockito.mock(User.class)
         ));
 
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(pastaFrolaProduct));
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(pastaFrolaProduct);
 
 
         assertThrows(ProductFullException.class, () -> productService.subscribeLoggedUser("1"));

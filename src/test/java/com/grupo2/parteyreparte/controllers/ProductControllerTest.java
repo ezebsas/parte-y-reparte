@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -53,20 +54,22 @@ class ProductControllerTest {
     @Test
     public void SE_RECIBE_201_CUANDO_USUARIO_PUBLICA_UN_ARTICULO() throws Exception {
 
-        String product = """
-                {    "name" : "Budin de pan",
-                    "image": "www.dns.asd.com",
-                    "link" : "www.amazon.com",
-                    "maxPeople" : 3,
-                    "minPeople" : 2,
-                    "deadline" : "2024-04-15T20:53:46.129+00:00",
-                    "totalCost" : 33.3,
-                    "suscribers" : [],
-                    "state": "OPEN"}""";
+        String productJson = "{" +
+                "\"name\": \"Budin de pan\"," +
+                "\"image\": \"www.dns.asd.com\"," +
+                "\"link\": \"www.amazon.com\"," +
+                "\"maxPeople\": 3," +
+                "\"minPeople\": 2," +
+                "\"deadline\": null," +
+                "\"totalCost\": 33.3," +
+                "\"subscribers\": []," +
+                "\"state\": \"OPEN\"" +
+                "}";
+
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/v1/products").content(product)
-                        .contentType("application/json"))
+                .post("/api/v1/products").content(productJson)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
     }

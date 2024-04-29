@@ -15,4 +15,10 @@ public class UserMapper {
         userDTO.setAge(user.getAge());
         return userDTO;
     }
+
+    public User mapToUser(UserDTO userDTO){
+        User user = new User(userDTO.getName(), userDTO.getAge(), userDTO.getEmail());
+        user.setId(userDTO.getId());
+        return user;
+    }
 }
