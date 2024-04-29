@@ -3,6 +3,7 @@ package com.grupo2.parteyreparte.controllers;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
+import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
@@ -26,39 +27,60 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
     @GetMapping("/users/me")
-    public ResponseEntity<UserDTO> getCurrentUser(){
+    public ResponseEntity<ApiResponse<UserDTO>> getCurrentUser(){
 
         UserDTO user = userMapper.mapToUserDTO(userService.getLoggedUser());
-        return ResponseEntity.ok(user);
+        ApiResponse<UserDTO> response = new ApiResponse<>();
+        response.setMessage("User's information");
+        response.setValue(user);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("users/me")
-    public ResponseEntity<UserDTO> patchCurrentUser(@RequestBody UserDTO userUpdate){
+    public ResponseEntity<ApiResponse<UserDTO>> patchCurrentUser(@RequestBody UserDTO userUpdate){
 
             UserDTO updatedUser = userService.updateUser(userUpdate);
-            return ResponseEntity.ok(updatedUser);
+            ApiResponse<UserDTO> response = new ApiResponse<>();
+            response.setMessage("Successful user's information update");
+            response.setValue(updatedUser);
+            return ResponseEntity.ok(response);
     }
 
 
     @GetMapping("/users/me/subscriptions")
-    public ResponseEntity<List<ProductDTO>> getCurrentUserProducts(){
-        return ResponseEntity.ok(userService.getLoggedUserProductsSubscribedDTO());
+    public ResponseEntity<ApiResponse<List<ProductDTO>> > getCurrentUserProducts(){
+
+        ApiResponse<List<ProductDTO>> response = new ApiResponse<>();
+        response.setMessage("User's Subscriptions");
+        response.setValue(userService.getLoggedUserProductsSubscribedDTO());
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/users/me/subscriptions/{id}")
-    public ResponseEntity<List<ProductDTO>> getCurrentUserProducts(@PathVariable("id") String productId){
+    public ResponseEntity< ApiResponse<List<ProductDTO>> > getCurrentUserProducts(@PathVariable("id") String productId){
 
         userService.deleteUserProductById(productId);
-        return ResponseEntity.ok(userService.getLoggedUserProductsSubscribedDTO());
+        ApiResponse<List<ProductDTO>> response = new ApiResponse<>();
+        response.setMessage("User's subscriptions after deletion");
+        response.setValue(userService.getLoggedUserProductsSubscribedDTO());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/users/me/notifications")
-    public ResponseEntity<List<Notification>> getCurrentUserNotifications(){
-        return ResponseEntity.ok(userService.getLoggedUserNotifications());
+    public ResponseEntity <ApiResponse<List<Notification>> >  getCurrentUserNotifications(){
+
+        ApiResponse<List<Notification>> response = new ApiResponse<>();
+        response.setMessage("User's notifications");
+        response.setValue(userService.getLoggedUserNotifications());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/users/me/products")
-    public ResponseEntity<List<ProductDTO>> getCurrentUserProductsPublished(){
-        return ResponseEntity.ok(userService.getLoggedUserProductsPublished());
+    public ResponseEntity<ApiResponse<List<ProductDTO>> > getCurrentUserProductsPublished(){
+
+        ApiResponse<List<ProductDTO>> response = new ApiResponse<>();
+        response.setMessage("User's published products");
+        response.setValue(userService.getLoggedUserProductsPublished());
+        return ResponseEntity.ok(response);
     }
 }

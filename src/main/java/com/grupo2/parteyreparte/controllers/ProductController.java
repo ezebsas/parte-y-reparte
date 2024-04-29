@@ -3,6 +3,7 @@ package com.grupo2.parteyreparte.controllers;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
+import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.StatsRepository;
@@ -33,63 +34,85 @@ public class ProductController {
     private StatsService statsService;
 
     @GetMapping("")
-    public ResponseEntity<List<ProductDTO>> getAll() {
+    public ResponseEntity<ApiResponse<List<ProductDTO>> > getAll() {
 
         List<ProductDTO> products = productService.getAll();
-
-        return ResponseEntity.ok(products);
+        ApiResponse<List<ProductDTO>> response = new ApiResponse<>();
+        response.setMessage("All products");
+        response.setValue(products);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("")
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ApiResponse<ProductDTO>> createProduct(@RequestBody ProductDTO productDTO) {
 
             ProductDTO createdProduct = productService.createProduct(productDTO);
             statsService.addInteraction();
-            return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
-
+            ApiResponse<ProductDTO> response = new ApiResponse<>();
+            response.setMessage("New product successfully created ");
+            response.setValue(createdProduct);
+            return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<ProductDTO>> getProductById(@PathVariable String id) {
 
             ProductDTO product = productService.getProductDTOById(id);
-            return ResponseEntity.ok(product);
+            ApiResponse<ProductDTO> response = new ApiResponse<>();
+            response.setMessage("Retrieved product: " + id);
+            response.setValue(product);
+            return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ApiResponse<ProductDTO>> updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
 
             ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
-            return ResponseEntity.ok(updatedProduct);
+            ApiResponse<ProductDTO> response = new ApiResponse<>();
+            response.setMessage("Updated product: " + id);
+            response.setValue(updatedProduct);
+            return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductDTO> patchProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ApiResponse<ProductDTO>> patchProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
 
             ProductDTO updatedProduct = productService.patchProduct(id, productDTO);
-            return ResponseEntity.ok(updatedProduct);
+            ApiResponse<ProductDTO> response = new ApiResponse<>();
+            response.setMessage("Updated product: " + id);
+            response.setValue(updatedProduct);
+            return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{id}/subscription")
-    public ResponseEntity<ProductDTO> subscribeUser(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<ProductDTO>> subscribeUser(@PathVariable String id) {
 
             ProductDTO product = productService.subscribeLoggedUser(id);
             statsService.addInteraction();
-            return ResponseEntity.ok(product);
+            ApiResponse<ProductDTO> response = new ApiResponse<>();
+            response.setMessage("Subscribed to product: " + id);
+            response.setValue(product);
+            return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}/participants")
-    public ResponseEntity<List<UserDTO>> getParticipants(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<List<UserDTO>> > getParticipants(@PathVariable String id) {
 
             List<UserDTO> participants = productService.getParticipants(id);
-            return ResponseEntity.ok(participants);
+            ApiResponse<List<UserDTO>> response = new ApiResponse<>();
+            response.setMessage("Product's subscribers ");
+            response.setValue(participants);
+            return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}/close")
-    public ResponseEntity<ProductDTO> closeProduct(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<ProductDTO>> closeProduct(@PathVariable String id) {
 
             ProductDTO product = productService.closeProduct(id);
-            return ResponseEntity.ok(product);
+            ApiResponse<ProductDTO> response = new ApiResponse<>();
+            response.setMessage("Closed product ");
+            response.setValue(product);
+            return ResponseEntity.ok(response);
 
     }
 

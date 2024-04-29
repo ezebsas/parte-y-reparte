@@ -5,6 +5,7 @@ import com.grupo2.parteyreparte.dtos.AuthResponseDTO;
 import com.grupo2.parteyreparte.dtos.ErrorResponseDTO;
 import com.grupo2.parteyreparte.dtos.RegisterRequestDTO;
 import com.grupo2.parteyreparte.exceptions.AuthException;
+import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.services.AuthService;
 import org.springframework.http.HttpStatus;
@@ -26,13 +27,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO request) {
-        return ResponseEntity.created(URI.create("/user/me")).body(authService.register(request));
+    public ResponseEntity<ApiResponse<AuthResponseDTO>> register(@RequestBody RegisterRequestDTO request) {
+
+        ApiResponse<AuthResponseDTO> response = new ApiResponse<>();
+        response.setMessage("User successfully registered ");
+        response.setValue(authService.register(request));
+        return ResponseEntity.created(URI.create("/user/me")).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestDTO request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<ApiResponse<AuthResponseDTO>> login(@RequestBody AuthRequestDTO request) {
+
+        ApiResponse<AuthResponseDTO> response = new ApiResponse<>();
+        response.setMessage("User logged in ");
+        response.setValue(authService.login(request));
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/logout")

@@ -1,5 +1,7 @@
 package com.grupo2.parteyreparte.controllers;
 
+import com.grupo2.parteyreparte.dtos.UserDTO;
+import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.services.StatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -7,22 +9,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RequestMapping("/api/v1")
 @RestController
 public class StatsController {
     @Autowired
     private StatsService statsService;
     @GetMapping("/stats/publications")
-    public ResponseEntity<Integer> numberOfPublications(){
+    public ResponseEntity<ApiResponse<Integer>> numberOfPublications(){
 
 
-        return ResponseEntity.ok(statsService.getPublicationsCount());
+        ApiResponse<Integer> response = new ApiResponse<>();
+        response.setMessage("Amount of publications ");
+        response.setValue(statsService.getPublicationsCount());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/stats/unique-users")
-    public ResponseEntity<Integer> uniqueUsers(){
+    public ResponseEntity<ApiResponse<Integer>> uniqueUsers(){
 
-
-        return ResponseEntity.ok(statsService.getUniqueUsersCount());
+        ApiResponse<Integer> response = new ApiResponse<>();
+        response.setMessage("Amount of unique users interactions ");
+        response.setValue(statsService.getUniqueUsersCount());
+        return ResponseEntity.ok(response);
     }
 }
