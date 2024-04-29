@@ -42,7 +42,7 @@ class ProductControllerTest {
 
     @BeforeEach
     public void before() {
-        product = new Product("Budin de pan","www.dns.asd.com",3,2,33.3);
+        product = new Product("Apple pie","www.dns.asd.com",3,2,33.3);
 
         ProductMapper productMapper = new ProductMapper(new UserMapper());
         ProductDTO productDTO = productMapper.mapToProductDTO(product);
@@ -52,10 +52,10 @@ class ProductControllerTest {
     }
 
     @Test
-    public void SE_RECIBE_201_CUANDO_USUARIO_PUBLICA_UN_ARTICULO() throws Exception {
+    public void test201WhenUserPublishesAProduct() throws Exception {
 
         String productJson = "{" +
-                "\"name\": \"Budin de pan\"," +
+                "\"name\": \"Apple pie\"," +
                 "\"image\": \"www.dns.asd.com\"," +
                 "\"link\": \"www.amazon.com\"," +
                 "\"maxPeople\": 3," +
@@ -74,7 +74,7 @@ class ProductControllerTest {
 
     }
     @Test
-    public void SE_RECIBE_200_CUANDO_SE_CONSULTAN_LOS_PRODUCTOS() throws Exception {
+    public void test200ForGetProducts() throws Exception {
 
 
         mockMvc.perform(MockMvcRequestBuilders

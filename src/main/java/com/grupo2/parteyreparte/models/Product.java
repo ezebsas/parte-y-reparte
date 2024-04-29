@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.models;
 
+import com.grupo2.parteyreparte.dtos.ProductDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -103,6 +104,49 @@ public class Product {
 
     public boolean isOwner(User user) {
         return this.owner.getId() == user.getId();
+    }
+
+    public void patchProduct(Product productUpdate) {
+
+
+        if (productUpdate.getName() != null) {
+            this.setName(productUpdate.getName());
+        }
+
+        if (productUpdate.getImage() != null) {
+            this.setImage(productUpdate.getImage());
+        }
+
+        if (productUpdate.getLink() != null) {
+            this.setLink(productUpdate.getLink());
+        }
+
+        if (productUpdate.getDeadline() != null) {
+            this.setDeadline(productUpdate.getDeadline());
+        }
+
+        if (productUpdate.getMaxPeople() != 0) {
+            this.setMaxPeople(productUpdate.getMaxPeople());
+        }
+
+        if (productUpdate.getMinPeople() != 0) {
+            this.setMinPeople(productUpdate.getMinPeople());
+        }
+
+        Double totalCost = productUpdate.getTotalCost();
+        if (totalCost != null) {
+            this.setTotalCost(totalCost);
+        }
+
+
+        if (productUpdate.getSuscribers() != null) {
+            this.setSuscribers(productUpdate.getSuscribers());
+        }
+
+        if (productUpdate.getState() != null) {
+            this.setState(productUpdate.getState());
+        }
+
     }
 
 }

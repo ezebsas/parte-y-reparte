@@ -73,43 +73,7 @@ public class ProductService {
 
         Product product = this.productMapper.mapToProduct(productDTO);
 
-        if (product.getName() != null) {
-            existingProduct.setName(product.getName());
-        }
-
-        if (product.getImage() != null) {
-            existingProduct.setImage(product.getImage());
-        }
-
-        if (product.getLink() != null) {
-            existingProduct.setLink(product.getLink());
-        }
-
-        if (product.getDeadline() != null) {
-            existingProduct.setDeadline(product.getDeadline());
-        }
-
-        if (product.getMaxPeople() != 0) {
-            existingProduct.setMaxPeople(product.getMaxPeople());
-        }
-
-        if (product.getMinPeople() != 0) {
-            existingProduct.setMinPeople(product.getMinPeople());
-        }
-
-        Double totalCost = product.getTotalCost();
-        if (totalCost != null) {
-            existingProduct.setTotalCost(totalCost);
-        }
-
-
-        if (product.getSuscribers() != null) {
-            existingProduct.setSuscribers(product.getSuscribers());
-        }
-
-        if (product.getState() != null) {
-            existingProduct.setState(product.getState());
-        }
+        existingProduct.patchProduct(product);
 
         return this.productMapper.mapToProductDTO(this.productRepository.update(id, existingProduct));
     }

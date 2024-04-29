@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.models;
 
+import com.grupo2.parteyreparte.dtos.UserDTO;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -93,4 +94,22 @@ public class User implements UserDetails {
     public void susbribeProduct(Product product) {
         this.productsSubscribed.add(product);
     }
+
+    public void updateUser(UserDTO userUpdate) {
+
+
+        if (userUpdate.getName() != null) {
+            this.setName(userUpdate.getName());
+        }
+
+        if ((Integer)userUpdate.getAge() != null) {
+            this.setAge(userUpdate.getAge());
+        }
+
+        if (userUpdate.getEmail() != null) {
+            this.setEmail(userUpdate.getEmail());
+        }
+
+    }
+
 }

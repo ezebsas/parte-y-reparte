@@ -73,19 +73,7 @@ public class UserService {
     public UserDTO updateUser(UserDTO userUpdate) {
 
         User user = this.getLoggedUser();
-
-        if (userUpdate.getName() != null) {
-            user.setName(userUpdate.getName());
-        }
-
-        if ((Integer)userUpdate.getAge() != null) {
-            user.setAge(userUpdate.getAge());
-        }
-
-        if (userUpdate.getEmail() != null) {
-            user.setEmail(userUpdate.getEmail());
-        }
-
+        user.updateUser(userUpdate);
         return userMapper.mapToUserDTO(user);
     }
 }

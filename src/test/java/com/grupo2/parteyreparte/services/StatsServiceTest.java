@@ -34,7 +34,7 @@ class StatsServiceTest {
 
 
     @Test // Solo para la parte de contador de publicaciones de la historia 5
-    public void LA_CANTIDAD_DE_PUBLICACIONES_ES_3() {
+    public void testAmountOfPublicationsIs3() {
 
         Mockito.when(productRepository.getAll()).thenReturn(
                 java.util.List.of(Mockito.mock(Product.class),Mockito.mock(Product.class),Mockito.mock(Product.class))
