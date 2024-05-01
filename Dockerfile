@@ -9,7 +9,8 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Use an official OpenJDK image as the base image
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin
+#:17-jre-alpine
 
 # Set the working directory in the container
 WORKDIR /app

@@ -2,6 +2,7 @@ package com.grupo2.parteyreparte.controllers;
 
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
+import com.grupo2.parteyreparte.services.AuthService;
 import com.grupo2.parteyreparte.services.StatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,12 @@ import java.util.List;
 @RequestMapping("/api/v1")
 @RestController
 public class StatsController {
+    private final StatsService statsService;
+
     @Autowired
-    private StatsService statsService;
+    public StatsController(StatsService statsService) {
+        this.statsService = statsService;
+    }
     @GetMapping("/stats/publications")
     public ResponseEntity<ApiResponse<Integer>> numberOfPublications(){
 

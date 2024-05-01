@@ -20,13 +20,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final ProductMapper productMapper;
+    private final UserMapper userMapper;
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    public UserService(ProductMapper productMapper) {
+    public UserService(ProductMapper productMapper, UserMapper userMapper) {
         this.productMapper = productMapper;
+        this.userMapper = userMapper;
     }
 
     public int getLoggedUserId() {

@@ -8,6 +8,7 @@ import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
+import com.grupo2.parteyreparte.services.StatsService;
 import com.grupo2.parteyreparte.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,15 @@ import java.util.List;
 @RequestMapping("/api/v1")
 @RestController
 public class UserController {
+    private final UserService userService;
+    private final UserMapper userMapper;
 
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService, UserMapper userMapper) {
+        this.userService = userService;
+        this.userMapper = userMapper;
+    }
 
-    @Autowired
-    private UserMapper userMapper;
     @GetMapping("/users/me")
     public ResponseEntity<ApiResponse<UserDTO>> getCurrentUser(){
 

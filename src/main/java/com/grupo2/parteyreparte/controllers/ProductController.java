@@ -23,17 +23,16 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductService productService;
-
+    private final StatsService statsService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, StatsService statsService) {
         this.productService = productService;
+        this.statsService = statsService;
     }
 
-    @Autowired
-    private StatsService statsService;
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<ApiResponse<List<ProductDTO>> > getAll() {
 
         List<ProductDTO> products = productService.getAll();

@@ -12,11 +12,12 @@ _Descargar repositorio mediante git_
 ### Pre-requisitos 📋
 
 * Docker
+* Archivo de configuración .env
 
 
 ## Despliegue 📦
 
-
+* Es necesario completar el .env con los datos que aparecen en el .env.example, enviamos el mismo por privado para las entregas
 * En la carpeta raiz del proyecto ejecutar el comando de docker ("docker compose up")
 
 
