@@ -1,6 +1,7 @@
 package com.grupo2.parteyreparte.dtos;
 
 import com.grupo2.parteyreparte.models.ProductState;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 
-@Getter
-@Setter
+@Data
 public class ProductDTO {
     @Getter
     private String id;

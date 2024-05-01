@@ -1,10 +1,10 @@
 package com.grupo2.parteyreparte.dtos;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class RegisterRequestDTO {
     private String name;
     private int age;

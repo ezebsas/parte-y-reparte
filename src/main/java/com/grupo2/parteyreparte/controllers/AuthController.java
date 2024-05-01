@@ -8,6 +8,7 @@ import com.grupo2.parteyreparte.exceptions.AuthException;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.services.AuthService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,10 @@ import java.net.URI;
 
 @Controller
 @RequestMapping("/api/v1/auth")
+@AllArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
-
-    @Autowired
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponseDTO>> register(@RequestBody RegisterRequestDTO request) {

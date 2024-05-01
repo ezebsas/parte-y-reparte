@@ -1,8 +1,7 @@
 package com.grupo2.parteyreparte.dtos;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class UserDTO {
     private String name;

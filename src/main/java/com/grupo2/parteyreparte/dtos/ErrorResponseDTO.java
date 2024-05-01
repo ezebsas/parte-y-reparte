@@ -1,9 +1,11 @@
 package com.grupo2.parteyreparte.dtos;
 
 import lombok.Getter;
+import lombok.Value;
+
 import java.time.LocalDateTime;
 
-@Getter
+@Value
 public class ErrorResponseDTO {
     private final LocalDateTime timestamp;
     private final int status;
