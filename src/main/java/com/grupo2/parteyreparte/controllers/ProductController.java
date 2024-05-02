@@ -54,7 +54,7 @@ public class ProductController {
             ApiResponse<ProductDTO> response = new ApiResponse<>();
             response.setMessage("New product successfully created ");
             response.setValue(createdProduct);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
