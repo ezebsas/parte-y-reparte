@@ -53,6 +53,7 @@ public class ProductRepository {
         Product oldProduct = this.findById(id);
 
         product.setId(id);
+        product.setOwner(oldProduct.getOwner());
         this.productList.remove(oldProduct);
         this.productList.add(product);
 
