@@ -9,6 +9,8 @@ import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.StatsRepository;
 import com.grupo2.parteyreparte.services.ProductService;
 import com.grupo2.parteyreparte.services.StatsService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/products")
+@SecurityRequirement(name = "BearerAuth")
+@Tag(name = "Products")
 public class ProductController {
 
     private final ProductService productService;

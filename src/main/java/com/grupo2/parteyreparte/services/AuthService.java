@@ -26,6 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordValidator passwordValidator;
 
 
     /***
@@ -41,7 +42,7 @@ public class AuthService {
             throw new AuthException("User already exist");
         }
 
-        this.validatePassword(request.getPassword());
+        passwordValidator.validatePassword(request.getPassword());
 
         User user = User.builder()
                 .name(request.getName())
@@ -84,19 +85,4 @@ public class AuthService {
         return new AuthResponseDTO(jwtToken);
     }
 
-    /***
-     *
-     * @param password
-     * @throws AuthException when the password doesn't have the minimum length of 5 or alphamumeric characters
-     */
-    private void validatePassword(String password) {
-
-        String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(password);
-
-        if ( !matcher.matches()) {
-            throw new AuthException("Password must have alphanumeric characters and a minimum length of 5");
-        }
-    }
 }

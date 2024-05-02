@@ -4,6 +4,8 @@ import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.services.AuthService;
 import com.grupo2.parteyreparte.services.StatsService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @RequestMapping("/api/v1")
 @RestController
+@SecurityRequirement(name = "BearerAuth")
+@Tag(name = "Stats")
 public class StatsController {
     private final StatsService statsService;
 

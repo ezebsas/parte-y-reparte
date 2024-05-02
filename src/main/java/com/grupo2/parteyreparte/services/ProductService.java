@@ -12,6 +12,7 @@ import com.grupo2.parteyreparte.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 public class ProductService {
     private static final String PRODUCT_IS_FULL = "Product is full";
     private static final String USER_DOES_NOT_HAVE_PERMISSION = "User does not have permission to close this product";
+
+    private static final String PRODUCT_BAD_DATE = "Product deadline must be later than now";
 
 
     private final ProductRepository productRepository;
@@ -45,6 +48,10 @@ public class ProductService {
         User loggedUser = this.userService.getLoggedUser();
         Product product = this.productMapper.mapToProduct(productDTO);
         product.setOwner(loggedUser);
+
+        if (product.getDeadline().isBefore(LocalDateTime.now())) {
+            throw new ProductFullException("PRODUCT_BAD_DATE");
+        }
 
         loggedUser.publishProduct(product);
         //TODO: save user

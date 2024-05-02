@@ -8,6 +8,7 @@ import com.grupo2.parteyreparte.exceptions.AuthException;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.services.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/auth")
 @AllArgsConstructor
+@Tag(name = "Authentication")
 public class AuthController {
 
     private final AuthService authService;
@@ -42,14 +44,5 @@ public class AuthController {
         response.setValue(authService.login(request));
         return ResponseEntity.ok(response);
     }
-
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout() {
-        //TODO
-        // Pensar alguna manera de poner fin al token
-        // Ej black list pero preguntar
-        return null;
-    }
-
 
 }
