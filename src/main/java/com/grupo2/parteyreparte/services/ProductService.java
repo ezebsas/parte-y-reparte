@@ -21,6 +21,8 @@ public class ProductService {
     private static final String PRODUCT_IS_FULL = "Product is full";
     private static final String USER_DOES_NOT_HAVE_PERMISSION = "User does not have permission to close this product";
 
+    private static final String USER_ALREADY_SUBSCRIBED = "User is already subscribed to this product";
+
     private static final String PRODUCT_BAD_DATE = "Product deadline must be later than now";
 
 
@@ -90,6 +92,12 @@ public class ProductService {
         }
 
         User user = userService.getLoggedUser();
+
+        if (product.getSuscribers().stream().map(User::getId)
+                .anyMatch(id -> id.equals((Integer) user.getId() )) ) {
+            throw new ProductFullException(USER_ALREADY_SUBSCRIBED);
+        }
+
         product.subscribeUser(user);
         user.susbribeProduct(product);
 
