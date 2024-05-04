@@ -1,6 +1,8 @@
+import NavBar from "@/components/NavBar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Provider from "./Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} container mx-auto p-4`}>{children}</body>
+      <body className={`${inter.className} container mx-auto p-4`}>
+        <Provider>
+          <NavBar />
+            {children}
+        </Provider>
+        </body>
     </html>
   );
 }
