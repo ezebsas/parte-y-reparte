@@ -41,3 +41,4 @@ src/main/ui/node_modules/
 src/main/ui/.next/
 src/main/ui/.swc/
 src/main/ui/.*.env
+src/main/ui/.env.local
