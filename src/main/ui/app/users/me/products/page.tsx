@@ -1,67 +1,33 @@
 "use client";
 import { OwnerDataTable } from "./owner-data-table";
-import { Product, ownercolumns } from "./owner-colums";
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { ownercolumns } from "./owner-colums";
 import { redirect } from "next/navigation";
+import { useGetData } from "../../../custom hooks/useGetData";
 
-//TODO Get path from .env
-const path = "http://localhost:8080"
-const resource = "/api/v1/users/me/products"
-
-type Response = {
-  message : string,
-  value : Array<Product>
-}
+//TODO maybe get path from .env
+const resource = "/api/v1/users/me/products";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [products, setProducts] = useState(new Array<Product>());
-  const { data: session } = useSession();
+  const {
+    authError,
+    error,
+    data: productResponse,
+    isLoading,
+  } = useGetData({ resource: resource });
 
-  const receiveData = (data : Response) => {
-    return data.value;
+  if (authError) {
+    redirect("/api/auth/signin");
   }
-
-
-  // TODO What happens if the token expires? when i was seeing my products? Think about it
-  useEffect(() => {
-
-    const fetchData = async () => {
-
-      if (session == undefined) {
-        return;
-      }
-        const token = session?.user?.value.token;
-
-        const response = await fetch(path + resource, {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + token,
-          },
-        });
-
-        if (response.status == 200) {
-          const json = await response.json();
-          const dataList = receiveData(json);
-          setProducts(dataList);
-        }
-
-        setIsLoading(false);
-
-    }
-    fetchData();
-  }, [session, isLoading]);
 
   return (
     <section className="flex flex-col items-center	gap-x-8 gap-y-4">
       <h1 className="text-2xl">My products</h1>
       {isLoading ? (
-        "Loading.."
+        "Loading..."
+      ) : error ? (
+        "Error, please try again later."
       ) : (
-        <OwnerDataTable columns={ownercolumns} data={products} />
+        <OwnerDataTable columns={ownercolumns} data={productResponse?.value} />
       )}
     </section>
   );
