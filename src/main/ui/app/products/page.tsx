@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { fetchData } from "next-auth/client/_utils";
 import { OwnerDataTable } from "../users/me/products/owner-data-table";
 import { Product, ownercolumns } from "../users/me/products/owner-colums";
+import { Button } from "@/components/ui/button";
+import { Link } from "lucide-react";
 
 
 
@@ -42,9 +44,16 @@ export default function Home() {
   const sessionToken = session?.user.value.token;
   const products = useFetchProducts(sessionToken);
 
+  const handleRedirect = () => {
+    window.location.href = `/products/new`; 
+};
+
   return (
     <div>
       <OwnerDataTable columns={ownercolumns} data={products} />
+        <Button variant="outline" className={'bg-blue-500 text-white'} onClick={handleRedirect} >
+          Add Product
+        </Button>
     </div>
   );
 }
