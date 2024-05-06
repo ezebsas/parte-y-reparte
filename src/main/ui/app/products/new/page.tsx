@@ -43,9 +43,9 @@ const formSchema = z.object({
 
 export default function ProductForm() {
   const form = useForm({ resolver: zodResolver(formSchema) });
-
+//mandar al back
   const onSubmit = (data) => {
-    console.log(data); // You can replace this with your form submission logic
+    console.log(data); 
   };
 
   return (
