@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link";
- 
+
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -40,6 +40,19 @@ export const ownercolumns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ row }) => {
+      const product = row.original;
+
+      const handleRedirect = () => {
+        window.location.href = `/products/${product.id}`; // Reemplaza '/product/' con la ruta real de tu aplicación
+      };
+
+      return (
+        <Button variant="ghost" className="h-8 w-8 p-0" onClick={handleRedirect}>
+          {product.name}
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "totalCost",
@@ -127,11 +140,12 @@ export const ownercolumns: ColumnDef<Product>[] = [
     header: "Options",
     cell: ({ row }) => {
       const id = parseFloat(row.getValue("id"))
-    
+
       return <Link href={`/products/${id}`}>
         <Button variant="outline">🔧</Button>
       </Link>
     }
   },
+
 
 ]
