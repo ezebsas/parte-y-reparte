@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ColumnDef } from "@tanstack/react-table"
+import Link from "next/link";
  
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -68,10 +69,6 @@ export const ownercolumns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const state : ProductState = row.getValue("state")
       let text = ""
-      /**  ACTIVE = "ACTIVE",
-  PLANNING = "PLANNING",
-  COMPLETED = "COMPLETED",
-   */
 
       switch(state) {
         case ProductState.ACTIVE: 
@@ -125,7 +122,16 @@ export const ownercolumns: ColumnDef<Product>[] = [
         </div>)
     }
   },
-
-
+  {
+    accessorKey: "id",
+    header: "Options",
+    cell: ({ row }) => {
+      const id = parseFloat(row.getValue("id"))
+    
+      return <Link href={`/products/${id}`}>
+        <Button variant="outline">🔧</Button>
+      </Link>
+    }
+  },
 
 ]

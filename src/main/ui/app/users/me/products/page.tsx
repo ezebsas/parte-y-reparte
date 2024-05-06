@@ -2,6 +2,8 @@
 import { OwnerDataTable } from "./owner-data-table";
 import { Product, ownercolumns } from "./owner-colums";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 //TODO Get path from .env
 const path = "http://localhost:8080"
@@ -15,19 +17,23 @@ type Response = {
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState(new Array<Product>());
-
-  //TODO Get token from somewhere (like cookie)
-  const token = "";
-
+  const { data: session } = useSession();
 
   const receiveData = (data : Response) => {
     return data.value;
   }
 
+
+  // TODO What happens if the token expires? when i was seeing my products? Think about it
   useEffect(() => {
 
     const fetchData = async () => {
-      try {
+
+      if (session == undefined) {
+        return;
+      }
+        const token = session?.user?.value.token;
+
         const response = await fetch(path + resource, {
           method: "GET",
           mode: "cors",
@@ -45,13 +51,9 @@ export default function Home() {
 
         setIsLoading(false);
 
-      } catch {
-        console.log("Please try again later");
-        setIsLoading(false);
-      }
     }
     fetchData();
-  }, []);
+  }, [session, isLoading]);
 
   return (
     <section className="flex flex-col items-center	gap-x-8 gap-y-4">
