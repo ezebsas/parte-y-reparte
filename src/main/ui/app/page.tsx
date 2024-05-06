@@ -9,8 +9,6 @@ export default function Home() {
   const { data: session } = useSession();
   const [me, setMe] = useState();
   const fetchMe = async () => {
-    console.log("ola");
-    console.log(session)
     const res = await fetch("http://localhost:8080/api/v1/users/me", {
       method: "Get",
       headers: {

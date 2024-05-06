@@ -28,7 +28,7 @@ export default NextAuth({
         });
         const user = await res.json();
 
-        if (user) {
+        if (user && !user.error) {
           // Any object returned will be saved in `user` property of the JWT
           return user;
         } else {
@@ -48,5 +48,8 @@ export default NextAuth({
       session.user = token as any;
       return session;
     },
+  },
+  pages: {
+    signIn: "/login",
   },
 });
