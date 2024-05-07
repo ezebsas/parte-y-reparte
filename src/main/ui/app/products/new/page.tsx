@@ -13,9 +13,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useSession } from "next-auth/react";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const formSchema = z.object({
-  name: z.string().nonempty({
+  name: z.string().min(1, {
     message: "Name is required.",
   }),
   image: z.string().url({
@@ -30,10 +34,9 @@ const formSchema = z.object({
   minPeople: z.number().int().min(1, {
     message: "Minimum people must be at least 1.",
   }),
-  deadline: z.string().regex(
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/,
-    "Invalid date format. Expected: YYYY-MM-DDTHH:MM:SSZ"
-  ),
+  deadline: z.date().refine((value) => {
+    return value instanceof Date; 
+  }, "Invalid date format. Expected a Date object."),
   totalCost: z.number().min(0, {
     message: "Total cost must be a non-negative number.",
   }),
@@ -41,12 +44,38 @@ const formSchema = z.object({
   state: z.enum(["OPEN", "CLOSED"]),
 });
 
+
+
 export default function ProductForm() {
+  const { data: session } = useSession();
+  const sessionToken = session?.user.value.token;
   const form = useForm({ resolver: zodResolver(formSchema) });
-//mandar al back
-  const onSubmit = (data) => {
-    console.log(data); 
+
+  const onSubmit = async () => {
+    try {
+      const formData = form.getValues();
+      const res = await fetch("http://localhost:8080/api/v1/products", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${sessionToken}`,
+        },
+        body: JSON.stringify(formData),
+      });
+  
+    
+    } catch (error) {
+      console.error('Error submitting form:', error.message);
+    } 
   };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    console.log('Submitting form...');
+    onSubmit(); // Llama a la función onSubmit al hacer clic en el botón "Submit"
+  };
+
+  
 
   return (
     <Form {...form}>
@@ -58,7 +87,12 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Product's name" {...field} />
+                <Input
+                  placeholder="Product's name"
+                  value={field.value || ''} // Asegúrate de manejar el valor de forma controlada
+                  onChange={(e) => field.onChange(e.target.value)} // Define un onChange incluso si no haces nada en él
+                />
+
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -71,7 +105,12 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Image URL</FormLabel>
               <FormControl>
-                <Input placeholder="https://upload.wikimedia.org/..." {...field} />
+                <Input
+                  placeholder="https://upload.wikimedia.org/..."
+                  value={field.value || ''} // Asegúrate de manejar el valor de forma controlada
+                  onChange={(e) => field.onChange(e.target.value)} // Define un onChange incluso si no haces nada en él
+                />
+
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -84,7 +123,11 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Link URL</FormLabel>
               <FormControl>
-                <Input placeholder="www.my-product.com" {...field} />
+                <Input
+                  placeholder="https://www.my-product.com"
+                  value={field.value || ''} // Asegúrate de manejar el valor de forma controlada
+                  onChange={(e) => field.onChange(e.target.value)} // Define un onChange incluso si no haces nada en él
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -97,7 +140,15 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Maximum People</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="3" {...field} />
+                <Input
+                  type="number"
+                  inputMode="numeric"
+                  placeholder="3"
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value, 10);
+                    field.onChange(value);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -110,7 +161,15 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Minimum People</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="2" {...field} />
+                <Input
+                  type="number"
+                  inputMode="numeric"
+                  placeholder="1"
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value, 10);
+                    field.onChange(value);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -123,7 +182,13 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Deadline</FormLabel>
               <FormControl>
-                <Input type="datetime-local" {...field} />
+                <DatePicker
+                  selected={field.value}
+                  onChange={(date) => field.onChange(date)}
+                  showTimeInput
+                  dateFormat="yyyy-MM-dd'T'HH:mm:ss'Z'"
+                  placeholderText="Select deadline"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -136,13 +201,21 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Total Cost</FormLabel>
               <FormControl>
-                <Input type="number" step="0.01" placeholder="33.3" {...field} />
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="30.6"
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    field.onChange(value);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" onClick={handleFormSubmit}>Submit</Button>
       </form>
     </Form>
   );
