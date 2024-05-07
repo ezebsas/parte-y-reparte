@@ -58,16 +58,18 @@ function ProductDetails({ product }) {
   
     return (
         <div className="product-info-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ maxHeight: '10vw', maxWidth: '25vw' }}>
-                <Image
-                    src={product.image}
-                    layout="responsive"
-                    width={100}
-                    height={100}
-                    alt={product.name}
-                />
+           <div style={{ maxHeight: '10vw', maxWidth: '25vw', marginTop: '5rem' }}>
+                {product.image ? (
+                    <img
+                        src={product.image}
+                        alt={product.name}
+                        style={{ maxWidth: '100%', height: 'auto', maxHeight: '10vw' }}
+                    />
+                ) : (
+                    <p>No image available</p>
+                )}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', padding: '13rem', boxSizing: 'border-box' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', padding: '5rem', boxSizing: 'border-box' }}>
                 <Card  style={{ width: '100%' }}>
                     <CardHeader style={{ alignItems: 'center'}}>
                         <CardTitle>{product.name}</CardTitle>
