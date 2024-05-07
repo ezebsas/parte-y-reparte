@@ -72,7 +72,7 @@ export default function ProductForm() {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     console.log('Submitting form...');
-    onSubmit(); // Llama a la función onSubmit al hacer clic en el botón "Submit"
+    onSubmit(); 
   };
 
   
@@ -89,8 +89,8 @@ export default function ProductForm() {
               <FormControl>
                 <Input
                   placeholder="Product's name"
-                  value={field.value || ''} // Asegúrate de manejar el valor de forma controlada
-                  onChange={(e) => field.onChange(e.target.value)} // Define un onChange incluso si no haces nada en él
+                  value={field.value || ''} 
+                  onChange={(e) => field.onChange(e.target.value)}
                 />
 
               </FormControl>
@@ -107,8 +107,8 @@ export default function ProductForm() {
               <FormControl>
                 <Input
                   placeholder="https://upload.wikimedia.org/..."
-                  value={field.value || ''} // Asegúrate de manejar el valor de forma controlada
-                  onChange={(e) => field.onChange(e.target.value)} // Define un onChange incluso si no haces nada en él
+                  value={field.value || ''} 
+                  onChange={(e) => field.onChange(e.target.value)} 
                 />
 
               </FormControl>
@@ -125,8 +125,8 @@ export default function ProductForm() {
               <FormControl>
                 <Input
                   placeholder="https://www.my-product.com"
-                  value={field.value || ''} // Asegúrate de manejar el valor de forma controlada
-                  onChange={(e) => field.onChange(e.target.value)} // Define un onChange incluso si no haces nada en él
+                  value={field.value || ''} 
+                  onChange={(e) => field.onChange(e.target.value)}
                 />
               </FormControl>
               <FormMessage />
