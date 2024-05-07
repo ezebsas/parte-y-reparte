@@ -2,6 +2,7 @@ package com.grupo2.parteyreparte.repositories;
 
 import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.models.Product;
+import com.grupo2.parteyreparte.models.ProductUnit;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,7 @@ public class ProductRepository {
     private List<Product> productList = new ArrayList<>();
 
     public ProductRepository() {
-        Product product = new Product("a", "a", 1, 2, 12.2);
+        Product product = new Product("a", "a", 1, 2, 12.2, 10.0, ProductUnit.KILOGRAM);
         product.setId("1");
         productList.add(product);
     }

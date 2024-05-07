@@ -1,20 +1,15 @@
 package com.grupo2.parteyreparte.controllers;
 
+import com.grupo2.parteyreparte.dtos.NotificationDTO;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
-import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Notification;
-import com.grupo2.parteyreparte.models.Product;
-import com.grupo2.parteyreparte.models.User;
-import com.grupo2.parteyreparte.services.StatsService;
 import com.grupo2.parteyreparte.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,9 +71,9 @@ public class UserController {
     }
 
     @GetMapping("/users/me/notifications")
-    public ResponseEntity <ApiResponse<List<Notification>> >  getCurrentUserNotifications(){
+    public ResponseEntity <ApiResponse<List<NotificationDTO>> >  getCurrentUserNotifications(){
 
-        ApiResponse<List<Notification>> response = new ApiResponse<>();
+        ApiResponse<List<NotificationDTO>> response = new ApiResponse<>();
         response.setMessage("User's notifications");
         response.setValue(userService.getLoggedUserNotifications());
         return ResponseEntity.ok(response);

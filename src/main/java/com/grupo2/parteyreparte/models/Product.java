@@ -26,8 +26,10 @@ public class Product {
     private List<User> suscribers;
     private ProductState state;
     private User owner;
+    private ProductUnit unit;
+    private Double quantity;
 
-    public Product(String name, String image, int maxPeople, int minPeople, Double totalCost) {
+    public Product(String name, String image, int maxPeople, int minPeople, Double totalCost, Double quantity, ProductUnit unit) {
         this.name = name;
         this.image = image;
         this.link = "";
@@ -37,70 +39,50 @@ public class Product {
         this.suscribers = new ArrayList<User>();
         this.state = ProductState.OPEN;
         this.createdAt = LocalDateTime.now();
+        this.quantity = quantity;
+        this.unit = unit;
     }
 
-    public void partReceived() {
-        //TODO
+    public Double partReceived() {
+        return this.quantity / this.suscribers.size();
+    }
+
+    public Double partToPay() {
+        return this.totalCost / this.suscribers.size();
     }
 
     public boolean isFull() {
-            return this.suscribers.size() >= this.maxPeople;
-        }
+        return this.suscribers.size() >= this.maxPeople;
+    }
 
     public void subscribeUser(User user) {
         this.suscribers.add(user);
 
         if (this.isFull()) {
-            this.state = ProductState.CLOSED;
+            this.state = ProductState.CLOSED_COMPLETED;
         }
     }
 
     public void close() {
         if (this.suscribers.size() < this.minPeople) {
-            this.state = ProductState.INCOMPLETED;
+            this.state = ProductState.CLOSED_INCOMPLETE;
+        } else if (!this.canBeDistributed()) {
+            this.state = ProductState.CANNOT_BE_DISTRIBUTED;
         } else {
-            this.state = ProductState.CLOSED;
+            this.state = ProductState.CLOSED_COMPLETED;
         }
 
         this.closedAt = LocalDateTime.now();
         this.notifyUsers(this.state);
     }
+    private boolean canBeDistributed() {
+        return this.unit != ProductUnit.UNIT || this.quantity % this.suscribers.size() == 0;
+    }
 
     private void notifyUsers(ProductState state) {
-        Notification notification = new Notification("Product closed", this.generateNotificationMessage(), LocalDateTime.now());
+        Notification notification = new Notification("Product closed", LocalDateTime.now(), this);
         this.suscribers.forEach(user -> user.notifyClosedProduct(notification));
     }
-
-    private String generateNotificationMessage() {
-        String action;
-        String reason = "";
-        String nextStep = "";
-
-        switch (this.state) {
-            case CLOSED:
-                action = "closed";
-                if (this.isFull()) {
-                    reason = "because it reached the maximum number of subscribers";
-                } else {
-                    reason = "by the seller or because the deadline was reached";
-                }
-                nextStep = "You can proceed with the purchase";
-                break;
-            case INCOMPLETED:
-                action = "closed";
-                reason = "by the seller or because the deadline was reached";
-                nextStep = "The product is not available for purchase because it did not reach the minimum number of subscribers";
-                break;
-            default:
-                action = "unknown state";
-                reason = "The current state of the product is unknown";
-                nextStep = "Please contact customer support for assistance";
-                break;
-        }
-
-        return String.format("The product %s has been %s %s. %s.", this.name, action, reason, nextStep);
-    }
-
 
     public boolean isOwner(User user) {
         return this.owner.getId() == user.getId();
@@ -145,6 +127,14 @@ public class Product {
 
         if (productUpdate.getState() != null) {
             this.setState(productUpdate.getState());
+        }
+
+        if (productUpdate.getUnit() != null) {
+            this.setUnit(productUpdate.getUnit());
+        }
+
+        if (productUpdate.getQuantity() != null) {
+            this.setQuantity(productUpdate.getQuantity());
         }
 
     }

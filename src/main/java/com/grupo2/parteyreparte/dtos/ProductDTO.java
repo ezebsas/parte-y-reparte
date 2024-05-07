@@ -1,6 +1,7 @@
 package com.grupo2.parteyreparte.dtos;
 
 import com.grupo2.parteyreparte.models.ProductState;
+import com.grupo2.parteyreparte.models.ProductUnit;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,12 +23,14 @@ public class ProductDTO {
     private int minPeople;
     private Double totalCost;
     private ProductState state;
+    private ProductUnit unit;
+    private Double quantity;
     private List<UserDTO> subscribers;
     private UserDTO owner;
 
     public ProductDTO() {}
 
-    public ProductDTO(String name, String image, int maxPeople, int minPeople, double totalCost) {
+    public ProductDTO(String name, String image, int maxPeople, int minPeople, double totalCost, double quantity, ProductUnit unit) {
         this.name = name;
         this.image = image;
         this.link = "";
@@ -35,5 +38,7 @@ public class ProductDTO {
         this.minPeople = minPeople;
         this.totalCost = totalCost;
         this.state = ProductState.OPEN;
+        this.quantity = quantity;
+        this.unit = unit;
     }
 }

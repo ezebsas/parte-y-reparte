@@ -79,6 +79,14 @@ function ProductDetails({ product }) {
                                 <span>${product.totalCost}</span>
                             </div>
                             <div className="flex mb-2">
+                                <span className="font-bold mr-2">Quantity:</span>
+                                <span>{product.quantity}</span>
+                            </div>
+                            <div className="flex mb-2">
+                                <span className="font-bold mr-2">Unit:</span>
+                                <span>{product.unit}</span>
+                            </div>
+                            <div className="flex mb-2">
                                 <span className="font-bold mr-2">State:</span>
                                 <span>{product.state}</span>
                             </div>
