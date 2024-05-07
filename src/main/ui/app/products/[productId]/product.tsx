@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 
 
@@ -37,7 +38,6 @@ function ProductDetails({ product }) {
 
             if (res.ok) {
                 setSubscribed(true);
-                window.location.reload();
             } else {
                 throw new Error('Error subscribing:', res.statusText);
             }
@@ -47,9 +47,14 @@ function ProductDetails({ product }) {
         }
     };
 
-    if (!product) {
-      return <div>Loading...</div>; // O cualquier otro indicador de carga o mensaje apropiado
+    if(subscribed){
+        return <h1>Succesfully Subscribed</h1>
     }
+
+    if (!product) {
+      return <div>Loading...</div>; 
+    }
+
   
     return (
         <div className="product-info-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
