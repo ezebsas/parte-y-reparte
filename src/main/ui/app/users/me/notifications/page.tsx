@@ -22,16 +22,19 @@ export default function Home() {
   }
 
   return (
-    <section className="flex flex-col items-center gap-x-8 gap-y-4">
-      <h1 className="text-2xl">Notifications</h1>
-      {isLoading ? (
-        "Loading..."
-      ) : error ? (
-        "Error, please try again later."
-      ) : (
-        <NotificationsList notifications={notificationsResponse?.value} />
-      )}
-    </section>
+      <section className="flex flex-col items-center gap-x-8 gap-y-4">
+        <h1 className="text-2xl">Notifications</h1>
+        {isLoading ? (
+          "Loading..."
+        ) : error ? (
+          "Error, please try again later."
+        ) : notificationsResponse?.value && notificationsResponse.value.length > 0 ? (
+          <NotificationsList notifications={notificationsResponse.value} />
+        ) : (
+          <p>You have no notifications at the moment. Check back later!</p>
+        )}
+      </section>
   );
 }
+
 
