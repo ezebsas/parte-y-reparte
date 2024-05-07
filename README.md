@@ -21,6 +21,7 @@ _Descargar repositorio mediante git_
 El archivo .env hay que copiarlo en la raiz del proyecto
 Y en la carpeta /src/main/ui hay que copiar el archivo .env.local 
 * En la carpeta raiz del proyecto ejecutar el comando de docker ("docker compose up")
+* Ubicarse en la carpeta /src/main/ui y correr npm run dev
 
 
 
