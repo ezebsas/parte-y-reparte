@@ -17,6 +17,8 @@ import { useSession } from "next-auth/react";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useState } from "react";
+import { redirect } from 'next/navigation'
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -50,6 +52,7 @@ export default function ProductForm() {
   const { data: session } = useSession();
   const sessionToken = session?.user.value.token;
   const form = useForm({ resolver: zodResolver(formSchema) });
+  const [redir, setRedirect] = useState(false);
 
   const onSubmit = async () => {
     try {
@@ -58,10 +61,15 @@ export default function ProductForm() {
         method: "POST",
         headers: {
           Accept: "application/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${sessionToken}`,
         },
         body: JSON.stringify(formData),
       });
+
+      if(res.ok){
+        setRedirect(true);
+      }
   
     
     } catch (error) {
@@ -72,10 +80,12 @@ export default function ProductForm() {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     console.log('Submitting form...');
-    onSubmit(); 
+    onSubmit();
   };
 
-  
+  if(redir){
+    redirect('/products');
+  }
 
   return (
     <Form {...form}>
@@ -89,7 +99,7 @@ export default function ProductForm() {
               <FormControl>
                 <Input
                   placeholder="Product's name"
-                  value={field.value || ''} 
+                  value={field.value || ''}
                   onChange={(e) => field.onChange(e.target.value)}
                 />
 
@@ -107,8 +117,8 @@ export default function ProductForm() {
               <FormControl>
                 <Input
                   placeholder="https://upload.wikimedia.org/..."
-                  value={field.value || ''} 
-                  onChange={(e) => field.onChange(e.target.value)} 
+                  value={field.value || ''}
+                  onChange={(e) => field.onChange(e.target.value)}
                 />
 
               </FormControl>
@@ -125,7 +135,7 @@ export default function ProductForm() {
               <FormControl>
                 <Input
                   placeholder="https://www.my-product.com"
-                  value={field.value || ''} 
+                  value={field.value || ''}
                   onChange={(e) => field.onChange(e.target.value)}
                 />
               </FormControl>

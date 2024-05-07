@@ -34,6 +34,8 @@ function useFetchProduct(sessionToken){
   return product;
 }
 
+
+
 export default function Home() {
   const { data: session } = useSession();
   const sessionToken = session?.user.value.token;
