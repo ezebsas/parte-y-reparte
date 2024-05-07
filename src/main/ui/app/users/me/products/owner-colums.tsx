@@ -39,7 +39,8 @@ enum ProductState {
 const stateMap = {
   OPEN: "ACTIVE",
   CLOSED_COMPLETED: "COMPLETED",
-  CLOSED_INCOMPLETE: "INCOMPLETE"
+  CLOSED_INCOMPLETE: "INCOMPLETE",
+  CANNOT_BE_DISTRIBUTED: "CANNOT_BE_DISTRIBUTED"
 };
 
 
@@ -100,6 +101,9 @@ export const ownercolumns: ColumnDef<Product>[] = [
           break;
         case "INCOMPLETE":
           text = "🔴 Incomplete";
+          break;
+        case "CANNOT_BE_DISTRIBUTED":
+          text = "⚫ Cannot be distributed";
           break;
         default:
           text = "🟠 Planning";
