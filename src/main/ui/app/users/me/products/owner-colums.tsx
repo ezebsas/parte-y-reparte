@@ -99,7 +99,7 @@ export const ownercolumns: ColumnDef<Product>[] = [
   },
   {
     accessorFn: (row) => `${row.minPeople} / ${row.maxPeople}`,
-    header: "People",
+    header: "Min/Max",
   },
   {
     accessorKey: "subscribers",
