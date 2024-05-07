@@ -40,6 +40,8 @@ public class ProductMapper {
         productDTO.setTotalCost(product.getTotalCost());
         productDTO.setSubscribers(suscribers);
         productDTO.setState(product.getState());
+        productDTO.setUnit(product.getUnit());
+        productDTO.setQuantity(product.getQuantity());
 
         if (product.getOwner() != null) {
             productDTO.setOwner(userMapper.mapToUserDTO(product.getOwner()));
@@ -56,7 +58,7 @@ public class ProductMapper {
             }
         }
 
-        Product product = new Product(productDTO.getName(), productDTO.getImage(), productDTO.getMaxPeople(), productDTO.getMinPeople(), productDTO.getTotalCost());
+        Product product = new Product(productDTO.getName(), productDTO.getImage(), productDTO.getMaxPeople(), productDTO.getMinPeople(), productDTO.getTotalCost(), productDTO.getQuantity(), productDTO.getUnit());
 
         if (productDTO.getOwner() != null) {
             product.setOwner(userMapper.mapToUser(productDTO.getOwner()));

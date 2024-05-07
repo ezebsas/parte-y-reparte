@@ -24,6 +24,9 @@ const formSchema = z.object({
   name: z.string().min(1, {
     message: "Name is required.",
   }),
+  quantity: z.number().int().min(1, {
+      message: "Product quantity must be at least 1.",
+    }),
   image: z.string().url({
     message: "Image must be a valid URL.",
   }),
@@ -103,6 +106,51 @@ export default function ProductForm() {
                   onChange={(e) => field.onChange(e.target.value)}
                 />
 
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="quantity"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Quantity</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="10.0"
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    field.onChange(value);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="unit"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Unit</FormLabel>
+              <FormControl>
+                <select
+                  {...field}
+                  defaultValue=""
+                  className="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
+                >
+                  <option value="" disabled>Seleccione una unidad</option>
+                  <option value="KILOGRAM">Kilogramo</option>
+                  <option value="GRAM">Gramo</option>
+                  <option value="LITER">Litro</option>
+                  <option value="MILLILITER">Mililitro</option>
+                  <option value="UNIT">Unidad</option>
+                </select>
               </FormControl>
               <FormMessage />
             </FormItem>
