@@ -6,6 +6,7 @@ import com.grupo2.parteyreparte.mappers.ProductMapper;
 import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.ProductState;
+import com.grupo2.parteyreparte.models.ProductUnit;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,8 +53,9 @@ class ProductServiceTest {
     void testCreateAProductSuccessfully() {
 
         String test_id = "1";
-        Product cocaProduct = new Product("Coca","www.dns.a/a.img",3,2,33.2);
-        ProductDTO cocaProductDTO = new ProductDTO("Coca","www.dns.a/a.img",3,2,33.2);
+        Product cocaProduct = new Product("Coca","www.dns.a/a.img",3,2,33.2, 10.0, ProductUnit.UNIT);
+        cocaProduct.setDeadline(LocalDateTime.now().plusDays(2));
+        ProductDTO cocaProductDTO = new ProductDTO("Coca","www.dns.a/a.img",3,2,33.2, 10, ProductUnit.UNIT);
 
         Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(cocaProduct);
         Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(cocaProduct);
@@ -83,7 +87,7 @@ class ProductServiceTest {
         String test_id = "1";
         String pastFrola = "Pasta frola";
 
-        Product pastaFrolaProduct = new Product(pastFrola,"www.dns.a/a.img",5,2,33.2);
+        Product pastaFrolaProduct = new Product(pastFrola,"www.dns.a/a.img",5,2,33.2, 10.0, ProductUnit.KILOGRAM);
 
         Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(pastaFrolaProduct);
         Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(pastaFrolaProduct);
@@ -102,7 +106,7 @@ class ProductServiceTest {
     @Test
     void testNotifyUsersWhenClosingAPublication() {
 
-        Product beefProduct = new Product("Beef","www.dns.a/a.img",5,2,33.2);
+        Product beefProduct = new Product("Beef","www.dns.a/a.img",5,2,33.2, 10.0, ProductUnit.KILOGRAM);
 
         List<User> subscribers = new ArrayList<>();
         subscribers.add(new User("Ernesto",13,"ee@asd.com"));
@@ -120,13 +124,13 @@ class ProductServiceTest {
 
         assertEquals(1,subscribers.get(0).getNotifications().size());
         assertEquals(1,subscribers.get(1).getNotifications().size());
-        assertEquals(ProductState.CLOSED, beefProduct.getState());
+        assertEquals(ProductState.CLOSED_COMPLETED, beefProduct.getState());
     }
 
     @Test
     void testNotifyUsersWhenClosingAnIncompletePublication() {
 
-        Product bikePackProduct = new Product("Bike x100","www.dns.a/a.img",5,2,33.2);
+        Product bikePackProduct = new Product("Bike x100","www.dns.a/a.img",5,2,33.2, 10.0, ProductUnit.KILOGRAM);
 
         List<User> subscribers = new ArrayList<>();
         subscribers.add(new User("Ernesto",13,"ee@asd.com"));
@@ -140,7 +144,7 @@ class ProductServiceTest {
         productService.closeProduct("1");
 
         assertEquals(1,subscribers.get(0).getNotifications().size());
-        assertEquals(ProductState.INCOMPLETED, bikePackProduct.getState());
+        assertEquals(ProductState.CLOSED_INCOMPLETE, bikePackProduct.getState());
     }
 
     @Test // Parte de la historia 6
@@ -149,7 +153,7 @@ class ProductServiceTest {
         String test_id = "1";
         String applePie = "Apple Pie";
 
-        Product applePieProduct = new Product(applePie,"www.dns.a/a.img",2,1,33.2);
+        Product applePieProduct = new Product(applePie,"www.dns.a/a.img",2,1,33.2, 10.0, ProductUnit.KILOGRAM);
 
         applePieProduct.setSuscribers(List.of(
                 Mockito.mock(User.class),

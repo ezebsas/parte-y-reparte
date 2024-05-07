@@ -4,6 +4,7 @@ import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
 import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Product;
+import com.grupo2.parteyreparte.models.ProductUnit;
 import com.grupo2.parteyreparte.security.config.JwtAuthenticationFilter;
 import com.grupo2.parteyreparte.services.ProductService;
 import com.grupo2.parteyreparte.services.StatsService;
@@ -42,7 +43,7 @@ class ProductControllerTest {
 
     @BeforeEach
     public void before() {
-        product = new Product("Apple pie","www.dns.asd.com",3,2,33.3);
+        product = new Product("Apple pie","www.dns.asd.com",3,2,33.3, 10.0, ProductUnit.KILOGRAM);
 
         ProductMapper productMapper = new ProductMapper(new UserMapper());
         ProductDTO productDTO = productMapper.mapToProductDTO(product);

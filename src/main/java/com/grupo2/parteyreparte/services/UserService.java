@@ -1,11 +1,11 @@
 package com.grupo2.parteyreparte.services;
 
+import com.grupo2.parteyreparte.dtos.NotificationDTO;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
-import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
+import com.grupo2.parteyreparte.mappers.NotificationMapper;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
 import com.grupo2.parteyreparte.mappers.UserMapper;
-import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -21,11 +20,13 @@ import java.util.stream.Collectors;
 public class UserService {
     private final ProductMapper productMapper;
     private final UserMapper userMapper;
+    private final NotificationMapper notificationMapper;
 
     @Autowired
-    public UserService(ProductMapper productMapper, UserMapper userMapper) {
+    public UserService(ProductMapper productMapper, UserMapper userMapper, NotificationMapper notificationMapper) {
         this.productMapper = productMapper;
         this.userMapper = userMapper;
+        this.notificationMapper = notificationMapper;
     }
 
     public int getLoggedUserId() {
@@ -61,8 +62,8 @@ public class UserService {
 
     }
 
-    public List<Notification> getLoggedUserNotifications() {
-        return this.getLoggedUser().getNotifications();
+    public List<NotificationDTO> getLoggedUserNotifications() {
+        return (this.getLoggedUser().getNotifications().stream().map(notificationMapper::mapToNotificationDTO).collect(Collectors.toList()));
     }
 
     public List<ProductDTO> getLoggedUserProductsPublished() {

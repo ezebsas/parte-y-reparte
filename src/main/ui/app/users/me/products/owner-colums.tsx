@@ -36,6 +36,13 @@ enum ProductState {
   COMPLETED = "COMPLETED",
 }
 
+const stateMap = {
+  OPEN: "ACTIVE",
+  CLOSED_COMPLETED: "COMPLETED",
+  CLOSED_INCOMPLETE: "INCOMPLETE"
+};
+
+
 export const ownercolumns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
@@ -80,18 +87,22 @@ export const ownercolumns: ColumnDef<Product>[] = [
     accessorKey: "state",
     header: "Status",
     cell: ({ row }) => {
-      const state : ProductState = row.getValue("state")
-      let text = ""
+      const state = row.getValue("state");
+      const stateMapped = stateMap[state] || "UNKNOWN";
+      let text = "";
 
-      switch(state) {
-        case ProductState.ACTIVE: 
-          text = "🟢 Active"
-          break
-        case ProductState.COMPLETED: 
-          text = "🔴 Completed"
-          break
-        default: 
-          text = "🟠 Planning"
+      switch(stateMapped) {
+        case "ACTIVE":
+          text = "🟢 Active";
+          break;
+        case "COMPLETED":
+          text = "🔵 Completed";
+          break;
+        case "INCOMPLETE":
+          text = "🔴 Incomplete";
+          break;
+        default:
+          text = "🟠 Planning";
           break
       }
       return <div className="text-left font-medium">{text}</div>

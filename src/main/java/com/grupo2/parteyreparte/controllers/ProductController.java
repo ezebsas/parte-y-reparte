@@ -2,11 +2,7 @@ package com.grupo2.parteyreparte.controllers;
 
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
-import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
-import com.grupo2.parteyreparte.models.Product;
-import com.grupo2.parteyreparte.models.User;
-import com.grupo2.parteyreparte.repositories.StatsRepository;
 import com.grupo2.parteyreparte.services.ProductService;
 import com.grupo2.parteyreparte.services.StatsService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -14,11 +10,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
