@@ -1,6 +1,7 @@
 package com.grupo2.parteyreparte.repositories;
 
 import com.grupo2.parteyreparte.models.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
@@ -10,13 +11,14 @@ import java.util.Optional;
 import java.util.Random;
 
 @Repository
-public class UserRepository {
+public interface UserRepository extends MongoRepository<User, String> {
 
+    Optional<User> findByNameEquals(String name);
+
+/*
     List<User> users = new ArrayList<>();
 
-    public Optional<User> findByUsername(String username) {
-        return users.stream().filter(u -> u.getUsername().equals(username)).findFirst();
-    }
+
 
 
     public void save(User user) {
@@ -28,4 +30,6 @@ public class UserRepository {
 
         this.users.add(user);
     }
+    */
+
 }

@@ -24,7 +24,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username).orElseThrow();
+        return username -> userRepository.findByNameEquals(username).orElseThrow();
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {

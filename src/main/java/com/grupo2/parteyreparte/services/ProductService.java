@@ -94,7 +94,7 @@ public class ProductService {
         User user = userService.getLoggedUser();
 
         if (product.getSuscribers().stream().map(User::getId)
-                .anyMatch(id -> id.equals((Integer) user.getId() )) ) {
+                .anyMatch(id -> id.equals((String) user.getId() )) ) {
             throw new ProductFullException(USER_ALREADY_SUBSCRIBED);
         }
 

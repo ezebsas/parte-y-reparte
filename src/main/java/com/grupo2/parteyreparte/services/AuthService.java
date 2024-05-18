@@ -38,7 +38,7 @@ public class AuthService {
     public AuthResponseDTO register(RegisterRequestDTO request) {
 
 
-        if (userRepository.findByUsername(request.getEmail()).isPresent()) {
+        if (userRepository.findByNameEquals(request.getEmail()).isPresent()) {
             throw new AuthException("User already exist");
         }
 
@@ -78,7 +78,7 @@ public class AuthService {
         }
 
 
-        User user = userRepository.findByUsername(request.getEmail()).orElseThrow(() -> new AuthException("Username doesn't exist"));
+        User user = userRepository.findByNameEquals(request.getEmail()).orElseThrow(() -> new AuthException("Username doesn't exist"));
 
         String jwtToken = jwtService.generateToken(user);
 

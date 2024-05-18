@@ -29,7 +29,7 @@ public class UserService {
         this.notificationMapper = notificationMapper;
     }
 
-    public int getLoggedUserId() {
+    public String getLoggedUserId() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
     }
