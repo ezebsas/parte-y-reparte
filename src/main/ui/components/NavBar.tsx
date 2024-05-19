@@ -11,7 +11,7 @@ const AppBar = () => {
     <div className="flex mx-auto justify-between items-center">
       <div className="flex ml-5 gap-4">
         <Link href="/" className={buttonVariants({ variant: "outline" })}>Home</Link>
-        {session?.user.value.token ? (
+        {session?.user.value?.token ? (
           <>
             <Link href="/products" className={buttonVariants({ variant: "outline" })}>Productos</Link>
             <Link href="/users/me" className={buttonVariants({ variant: "outline" })}>Perfil</Link>
@@ -21,7 +21,7 @@ const AppBar = () => {
         }
       </div>
       <div className="flex mr-5 gap-4">
-        {session?.user.value.token ? (
+        {session?.user.value?.token ? (
           <>
             <p className="text-sky-600"> {session.user.name}</p>
             <Button className="secondary" onClick={() => signOut()}>

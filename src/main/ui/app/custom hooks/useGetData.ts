@@ -24,11 +24,10 @@ export const useGetData = ({ resource } : { resource : string}) => {
         return;
       }
 
-      let sessionUser : JWTSessionUser = session?.user;
       let token;
       
       try {
-        token = sessionUser!.value?.token;
+        token = session?.user.value?.token;
       } catch(err) {
         setAuthError(true);
         return;

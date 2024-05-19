@@ -19,7 +19,7 @@ import { redirect } from "next/navigation";
 
 function ProductDetails({ product }) {
     const { data: session } = useSession();
-    const sessionToken = session?.user.value.token;
+    const sessionToken = session?.user.value!.token;
     
 
     const [subscribed, setSubscribed] = useState(false);

@@ -53,7 +53,7 @@ const formSchema = z.object({
 
 export default function ProductForm() {
   const { data: session } = useSession();
-  const sessionToken = session?.user.value.token;
+  const sessionToken = session?.user.value?.token;
   const form = useForm({ resolver: zodResolver(formSchema) });
   const [redir, setRedirect] = useState(false);
 

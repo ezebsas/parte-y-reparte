@@ -15,6 +15,7 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Document
 public class User implements UserDetails {
 

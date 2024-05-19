@@ -9,7 +9,7 @@ import { Link } from "lucide-react";
 
 
 
-function useFetchProducts(sessionToken){
+function useFetchProducts(sessionToken : string){
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function useFetchProducts(sessionToken){
 
 export default function Home() {
   const { data: session } = useSession();
-  const sessionToken = session?.user.value.token;
+  const sessionToken = session?.user.value?.token!;
   const products = useFetchProducts(sessionToken);
 
   const handleRedirect = () => {

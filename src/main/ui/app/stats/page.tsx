@@ -12,7 +12,7 @@ export default function Home() {
     const res = await fetch("http://localhost:8080/api/v1/stats/unique-users", {
       method: "Get",
       headers: {
-        authorization: `Bearer ${session?.user.value.token}`,
+        authorization: `Bearer ${session?.user.value?.token}`,
       },
     });
 
@@ -23,7 +23,7 @@ export default function Home() {
     const res = await fetch("http://localhost:8080/api/v1/stats/publications", {
       method: "Get",
       headers: {
-        authorization: `Bearer ${session?.user.value.token}`,
+        authorization: `Bearer ${session?.user.value?.token}`,
       },
     });
 

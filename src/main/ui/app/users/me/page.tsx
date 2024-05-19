@@ -42,7 +42,7 @@ export default function Home() {
   const { data: session } = useSession();
   const { toast } = useToast()
 
-  const sessionToken = session?.user?.value.token;
+  const sessionToken = session?.user?.value?.token;
 
   useEffect(() => {
     if (!data?.value) {

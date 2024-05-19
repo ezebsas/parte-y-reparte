@@ -15,6 +15,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByNameEquals(String name);
 
+    Optional<User> findByEmailEquals(String name);
+
 /*
     List<User> users = new ArrayList<>();
 

@@ -6,7 +6,7 @@ import ProductDetails from "./product";
 
 
 
-function useFetchProduct(sessionToken){
+function useFetchProduct(sessionToken : string){
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function useFetchProduct(sessionToken){
 
 export default function Home() {
   const { data: session } = useSession();
-  const sessionToken = session?.user.value.token;
+  const sessionToken = session?.user.value?.token!;
   const product = useFetchProduct(sessionToken);
 
   return (
