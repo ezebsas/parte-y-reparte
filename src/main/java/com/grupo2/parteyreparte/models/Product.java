@@ -3,6 +3,8 @@ package com.grupo2.parteyreparte.models;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,9 +12,11 @@ import java.util.List;
 
 @Getter
 @Setter
+@Document(collection = "Products")
 public class Product {
 
     @Getter
+    @Id
     private String id;
     private String name;
     private String image;

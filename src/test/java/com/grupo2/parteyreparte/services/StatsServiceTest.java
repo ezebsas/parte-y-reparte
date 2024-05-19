@@ -1,7 +1,7 @@
 package com.grupo2.parteyreparte.services;
 
 import com.grupo2.parteyreparte.models.Product;
-import com.grupo2.parteyreparte.repositories.ProductRepository;
+import com.grupo2.parteyreparte.repositories.ProductRepositoryDepre;
 import com.grupo2.parteyreparte.repositories.StatsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class StatsServiceTest {
     UserService userService;
 
     @MockBean
-    ProductRepository productRepository;
+    ProductRepositoryDepre productRepository;
 
     @BeforeEach
     public void init() {

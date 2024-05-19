@@ -1,7 +1,7 @@
 package com.grupo2.parteyreparte.services;
 
 
-import com.grupo2.parteyreparte.repositories.ProductRepository;
+import com.grupo2.parteyreparte.repositories.ProductRepositoryDepre;
 import com.grupo2.parteyreparte.repositories.StatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 public class StatsService {
 
     private StatsRepository statsRepository;
-    private ProductRepository productRepository;
+    private ProductRepositoryDepre productRepository;
     private UserService userService;
 
     @Autowired
-    public StatsService(StatsRepository statsRepository, ProductRepository productRepository, UserService userService) {
+    public StatsService(StatsRepository statsRepository, ProductRepositoryDepre productRepository, UserService userService) {
         this.productRepository = productRepository;
         this.userService = userService;
         this.statsRepository = statsRepository;

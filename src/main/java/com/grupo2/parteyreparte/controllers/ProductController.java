@@ -75,7 +75,7 @@ public class ProductController {
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductDTO>> patchProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
 
-            ProductDTO updatedProduct = productService.patchProduct(id, productDTO);
+            ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
             ApiResponse<ProductDTO> response = new ApiResponse<>();
             response.setMessage("Updated product: " + id);
             response.setValue(updatedProduct);

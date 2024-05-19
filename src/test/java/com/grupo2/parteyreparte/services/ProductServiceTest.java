@@ -3,12 +3,11 @@ package com.grupo2.parteyreparte.services;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.exceptions.ProductFullException;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
-import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.ProductState;
 import com.grupo2.parteyreparte.models.ProductUnit;
 import com.grupo2.parteyreparte.models.User;
-import com.grupo2.parteyreparte.repositories.ProductRepository;
+import com.grupo2.parteyreparte.repositories.ProductRepositoryDepre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,7 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +29,7 @@ class ProductServiceTest {
     ProductService productService;
 
     @MockBean
-    ProductRepository productRepositoryMock;
+    ProductRepositoryDepre productRepositoryMock;
 
     @MockBean
     UserService userServiceMock;

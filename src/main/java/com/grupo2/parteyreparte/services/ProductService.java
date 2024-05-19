@@ -2,18 +2,21 @@ package com.grupo2.parteyreparte.services;
 
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
+import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.exceptions.ProductFullException;
 import com.grupo2.parteyreparte.exceptions.UnauthorizedOperationException;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
 import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
+import com.grupo2.parteyreparte.repositories.ProductRepositoryDepre;
 import com.grupo2.parteyreparte.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,10 @@ public class ProductService {
 
     private static final String PRODUCT_BAD_DATE = "Product deadline must be later than now";
 
+    private static final String PRODUCT_WITH_ID = "Product with id = ";
+    private static final String ALREADY_EXISTS = " already exists";
+    private static final String DOES_NOT_EXIST = " does not exist";
+
 
     private final ProductRepository productRepository;
     private final UserService userService;
@@ -34,15 +41,15 @@ public class ProductService {
 
     @Autowired
     public ProductService(ProductRepository productRepository, ProductMapper productMapper, UserMapper userMapper, UserService userService) {
-        this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.userMapper = userMapper;
         this.userService = userService;
+        this.productRepository = productRepository;
     }
 
     public List<ProductDTO> getAll() {
 
-        return this.productRepository.getAll().stream().map(this.productMapper::mapToProductDTO).collect(Collectors.toList());
+        return this.productRepository.findAll().stream().map(this.productMapper::mapToProductDTO).collect(Collectors.toList());
 
     }
 
@@ -55,34 +62,37 @@ public class ProductService {
             throw new ProductFullException("PRODUCT_BAD_DATE");
         }
 
-        loggedUser.publishProduct(product);
+        //loggedUser.publishProduct(product); DA OVERFLOW CHEQUEAR
         //TODO: save user
 
-        return this.productMapper.mapToProductDTO(this.productRepository.createProduct(product));
+        return this.productMapper.mapToProductDTO(this.productRepository.insert(product));
     }
 
     public ProductDTO getProductDTOById(String id) {
-        return this.productMapper.mapToProductDTO(this.productRepository.findById(id));
+        return this.productMapper.mapToProductDTO(this.getProductById(id));
     }
 
     public Product getProductById(String id) {
-        return this.productRepository.findById(id);
+        return this.productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_WITH_ID + id + DOES_NOT_EXIST));
     }
 
     public ProductDTO updateProduct(String id, ProductDTO productDTO) {
-        return this.productMapper.mapToProductDTO(this.productRepository.update(id, this.productMapper.mapToProduct(productDTO)));
+        Product product = this.getProductById(id);
+        product.patchProduct(productMapper.mapToProduct(productDTO));
+        return this.productMapper.mapToProductDTO(this.productRepository.save(product));
     }
-
+/* PARA mi con el update ya estaria xq hacen lo mismo
     public ProductDTO patchProduct(String id, ProductDTO productDTO) {
 
-        Product existingProduct = this.productRepository.findById(id);
+        Product existingProduct = this.getProductById(id);
 
         Product product = this.productMapper.mapToProduct(productDTO);
 
         existingProduct.patchProduct(product);
 
         return this.productMapper.mapToProductDTO(this.productRepository.update(id, existingProduct));
-    }
+    }*/
 
     public ProductDTO subscribeLoggedUser(String productId) {
         Product product = this.getProductById(productId);
@@ -99,9 +109,9 @@ public class ProductService {
         }
 
         product.subscribeUser(user);
+        this.productRepository.save(product);
         user.susbribeProduct(product);
 
-        this.productRepository.update(productId, product);
         return this.productMapper.mapToProductDTO(product);
     }
 
@@ -116,7 +126,7 @@ public class ProductService {
 
         if (product.isOwner(loggedUser)) {
             product.close();
-            this.productRepository.update(id, product);
+            this.productRepository.save(product);
             return this.productMapper.mapToProductDTO(product);
         } else {
             throw new UnauthorizedOperationException(USER_DOES_NOT_HAVE_PERMISSION);
