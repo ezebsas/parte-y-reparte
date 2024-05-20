@@ -1,59 +1,51 @@
 "use client";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { fetchData } from "next-auth/client/_utils";
-import { OwnerDataTable } from "../users/me/products/owner-data-table";
-import { Product, ownercolumns } from "../users/me/products/owner-colums";
+
 import { Button } from "@/components/ui/button";
-import { Link } from "lucide-react";
+import { ProductDataGrid } from "./product-data-grid";
+import { productColumn } from "./product-column";
+import { useGetData } from "../custom hooks/useGetData";
+import { redirect } from "next/navigation";
 
-
-
-function useFetchProducts(sessionToken : string){
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (sessionToken) {
-          const res = await fetch("http://localhost:8080/api/v1/products", {
-            method: "GET",
-            mode: "cors",
-            headers: {
-              Accept: "application/json",
-              Authorization: `Bearer ${sessionToken}`,
-            },
-          });
-          const data = await res.json();
-          console.log('s');
-          setProducts(data?.value || []);
-        }
-      } catch (error) {
-        console.log('Error fetching products:');
-      }
-    };
-    fetchData();
-  }, [sessionToken]); 
-  console.log(products);
-
-  return products;
-}
+const RESOURCE = "/api/v1/products";
 
 export default function Home() {
-  const { data: session } = useSession();
-  const sessionToken = session?.user.value?.token!;
-  const products = useFetchProducts(sessionToken);
+  const {
+    authError,
+    error,
+    data: productResponse,
+    isLoading,
+  } = useGetData({ resource: RESOURCE });
 
   const handleRedirect = () => {
-    window.location.href = `/products/new`; 
-};
+    window.location.href = `/products/new`;
+  };
+
+  if (authError) {
+    redirect("/api/auth/signin");
+  }
 
   return (
-    <div>
-      <OwnerDataTable columns={ownercolumns} data={products} />
-        <Button variant="outline" className={'bg-blue-500 text-white'} onClick={handleRedirect} >
-          Add Product
-        </Button>
+    <div className="flex flex-col content-center text-center my-2">
+      <h1 className="text-2xl"> Products </h1>
+      {isLoading ? (
+        "Loading"
+      ) : error ? (
+        "Error. Please try again later"
+      ) : (
+        <>
+          <ProductDataGrid
+            columns={productColumn}
+            data={productResponse?.value}
+          />
+          <Button
+            variant="outline"
+            className={"bg-blue-500 text-white"}
+            onClick={handleRedirect}
+          >
+            Add Product
+          </Button>
+        </>
+      )}
     </div>
   );
 }

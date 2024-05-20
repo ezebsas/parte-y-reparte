@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { fetchData } from "next-auth/client/_utils";
 import { useEffect, useState } from "react";
 import ProductDetails from "./product";
+import { IProduct } from "@/app/interfaces/IProduct";
 
 
 
@@ -39,7 +40,7 @@ function useFetchProduct(sessionToken : string){
 export default function Home() {
   const { data: session } = useSession();
   const sessionToken = session?.user.value?.token!;
-  const product = useFetchProduct(sessionToken);
+  const product : IProduct = useFetchProduct(sessionToken)!;
 
   return (
     <div>

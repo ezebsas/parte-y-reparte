@@ -1,8 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-      loader: 'imgix', 
-      path: '', 
+      loader: 'default', 
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: '**',
+        },
+        {
+          protocol: 'http',
+          hostname: '**',
+        },
+      ],
   },
 };
 

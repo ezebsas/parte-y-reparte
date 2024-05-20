@@ -17,7 +17,7 @@ import { useSession } from "next-auth/react";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { redirect } from 'next/navigation'
 
 const formSchema = z.object({
@@ -76,11 +76,18 @@ export default function ProductForm() {
   
     
     } catch (error) {
-      console.error('Error submitting form:', error.message);
+      let message = "Unknown Error";
+
+      if (error instanceof Error) {
+          message = error.message;
+      }
+
+      console.error('Error subscribing:', message);
+      // Handle errors here
     } 
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = (e : FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log('Submitting form...');
     onSubmit();
@@ -273,7 +280,7 @@ export default function ProductForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" onClick={handleFormSubmit}>Submit</Button>
+        <Button type="submit" onSubmit={handleFormSubmit}>Submit</Button>
       </form>
     </Form>
   );

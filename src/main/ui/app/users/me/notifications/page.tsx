@@ -7,15 +7,13 @@ import NotificationsList from "./notifications-list";
 const resource = "/api/v1/users/me/notifications";
 
 export default function Home() {
-  const { data: session } = useSession();
-  const sessionToken = session?.user.value.token;
 
   const {
     authError,
     error,
     data: notificationsResponse,
     isLoading,
-  } = useGetData({ resource: resource, token: sessionToken });
+  } = useGetData({ resource: resource });
 
   if (authError) {
     redirect("/api/auth/signin");

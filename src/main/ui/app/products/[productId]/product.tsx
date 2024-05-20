@@ -13,11 +13,12 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { IProduct } from "@/app/interfaces/IProduct";
 
 
 
 
-function ProductDetails({ product }) {
+function ProductDetails({ product } : {product : IProduct}) {
     const { data: session } = useSession();
     const sessionToken = session?.user.value!.token;
     
@@ -39,10 +40,16 @@ function ProductDetails({ product }) {
             if (res.ok) {
                 setSubscribed(true);
             } else {
-                throw new Error('Error subscribing:', res.statusText);
+                throw new Error('Error subscribing:' + res.statusText);
             }
         } catch (error) {
-            console.error('Error subscribing:', error.message);
+            let message = "Unknown Error";
+
+            if (error instanceof Error) {
+                message = error.message;
+            }
+
+            console.error('Error subscribing:', message);
             // Handle errors here
         }
     };

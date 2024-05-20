@@ -1,5 +1,8 @@
 "use client"
  
+import { ProductState } from "@/app/enums/ProductState";
+import { IProduct } from "@/app/interfaces/IProduct";
+import { IUser } from "@/app/interfaces/IUser";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -9,42 +12,7 @@ import Link from "next/link";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export type Product = {
-  id: string;
-  name: string;
-  image: string;
-  link: string;
-  deadline: string;
-  maxPeople: number;
-  minPeople: number;
-  totalCost: number;
-  state: ProductState;
-  subscribers: User[];
-  owner: User;
-}
-
-type User = {
-  name: string;
-  age: number;
-  email: string;
-  id: number;
-}
-
-enum ProductState {
-  ACTIVE = "ACTIVE",
-  PLANNING = "PLANNING",
-  COMPLETED = "COMPLETED",
-}
-
-const stateMap = {
-  OPEN: "ACTIVE",
-  CLOSED_COMPLETED: "COMPLETED",
-  CLOSED_INCOMPLETE: "INCOMPLETE",
-  CANNOT_BE_DISTRIBUTED: "CANNOT_BE_DISTRIBUTED"
-};
-
-
-export const ownercolumns: ColumnDef<Product>[] = [
+export const ownercolumns: ColumnDef<IProduct>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -89,11 +57,11 @@ export const ownercolumns: ColumnDef<Product>[] = [
     header: "Status",
     cell: ({ row }) => {
       const state = row.getValue("state");
-      const stateMapped = stateMap[state] || "UNKNOWN";
+
       let text = "";
 
-      switch(stateMapped) {
-        case "ACTIVE":
+      switch(state) {
+        case "OPEN":
           text = "🟢 Active";
           break;
         case "COMPLETED":
@@ -120,7 +88,7 @@ export const ownercolumns: ColumnDef<Product>[] = [
     accessorKey: "subscribers",
     header: "Suscribers",
     cell: ({ row }) => {
-      const suscriber: Array<User> = row.getValue("subscribers")
+      const suscriber: Array<IUser> = row.getValue("subscribers")
       return (
         <div className="text-left font-medium">
         <Popover>

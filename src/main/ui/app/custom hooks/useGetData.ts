@@ -1,20 +1,16 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
+import { Response } from '../interfaces/IResponse';
 
 // TODO get path from env
 const path = "http://localhost:8080"
-
-type Response = {
-  message : string,
-  value : any
-}
 
 export const useGetData = ({ resource } : { resource : string}) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [data, setData] = useState<Response>();
   const [authError, setAuthError] = useState<boolean>(false);
-  const { data: session, status, update } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
 
@@ -24,20 +20,8 @@ export const useGetData = ({ resource } : { resource : string}) => {
         return;
       }
 
-      let token;
+      let token = session?.user.value?.token;
       
-      try {
-        token = session?.user.value?.token;
-      } catch(err) {
-        setAuthError(true);
-        return;
-      }
-
-      if (!token) {
-        setAuthError(true);
-        return;
-      }
-
         try {
           const response = await fetch(path + resource, {
             method: "GET",
@@ -51,6 +35,8 @@ export const useGetData = ({ resource } : { resource : string}) => {
           if (response.status == 200) {
             const json = await response.json();
             setData(json);
+          } else if (response.status == 403) {
+            setAuthError(true);
           } else {
             setError(true);
           }

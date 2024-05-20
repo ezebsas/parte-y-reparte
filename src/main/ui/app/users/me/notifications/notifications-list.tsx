@@ -1,7 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
 
-const NotificationsList = ({ notifications }) => {
+
+interface Notification {
+  title: string;
+  message: string;
+  date: string;
+  productId: string;
+}
+
+const NotificationsList = ({ notifications } : { notifications : Array<Notification>}) => {
   return (
     <div className="max-w-2xl mx-auto mt-8 bg-white rounded-lg shadow-lg p-6">
       <ul className="divide-y divide-gray-200">
