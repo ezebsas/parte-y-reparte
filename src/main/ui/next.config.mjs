@@ -2,6 +2,8 @@
 const nextConfig = {
   images: {
       loader: 'default', 
+
+      // Despues cambiar
       remotePatterns: [
         {
           protocol: 'https',

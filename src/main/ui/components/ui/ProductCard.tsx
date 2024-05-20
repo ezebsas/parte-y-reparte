@@ -82,10 +82,10 @@ export const ProductCard = ({ product, handleClic }: productCardI) => {
         }
       </span>
       <Image
-        className="rounded-lg"
+        className="rounded-lg object-cover min-h-64 max-h-64"
         width={300}
         height={300}
-        src={"https://w0.peakpx.com/wallpaper/127/108/HD-wallpaper-anime-virtual-youtuber-tokoyami-towa-hololive.jpg"}
+        src={product.image}
         alt={`image of product ${product.name}`}
       />
 

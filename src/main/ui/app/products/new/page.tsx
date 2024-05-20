@@ -280,7 +280,7 @@ export default function ProductForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" onSubmit={handleFormSubmit}>Submit</Button>
+        <Button type="submit" onClick={handleFormSubmit}>Submit</Button>
       </form>
     </Form>
   );
