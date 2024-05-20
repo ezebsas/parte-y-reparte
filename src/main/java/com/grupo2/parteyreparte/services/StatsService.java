@@ -1,7 +1,7 @@
 package com.grupo2.parteyreparte.services;
 
 
-import com.grupo2.parteyreparte.repositories.ProductRepositoryDepre;
+import com.grupo2.parteyreparte.repositories.ProductRepository;
 import com.grupo2.parteyreparte.repositories.StatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,19 +10,19 @@ import org.springframework.stereotype.Service;
 public class StatsService {
 
     private StatsRepository statsRepository;
-    private ProductRepositoryDepre productRepository;
+    private ProductService productService;
     private UserService userService;
 
     @Autowired
-    public StatsService(StatsRepository statsRepository, ProductRepositoryDepre productRepository, UserService userService) {
-        this.productRepository = productRepository;
+    public StatsService(StatsRepository statsRepository, ProductService productService, UserService userService) {
+        this.productService = productService;
         this.userService = userService;
         this.statsRepository = statsRepository;
     }
 
     public Integer getPublicationsCount(){
 
-        return productRepository.getAll().size();
+        return productService.getAll().size();
     }
 
     public Integer getUniqueUsersCount(){
