@@ -77,19 +77,21 @@ public class Product {
         }
 
         this.closedAt = LocalDateTime.now();
-        this.notifyUsers(this.state);
+        //this.notifyUsers(this.state);
     }
     private boolean canBeDistributed() {
         return this.unit != ProductUnit.UNIT || this.quantity % this.suscribers.size() == 0;
     }
 
-    private void notifyUsers(ProductState state) {
+    public void notifyUsers() {
         Notification notification = new Notification("Product closed", LocalDateTime.now(), this);
-        this.suscribers.forEach(user -> user.notifyClosedProduct(notification));
+        for (User user : this.suscribers) {
+            user.notifyClosedProduct(notification);
+        }
     }
 
     public boolean isOwner(User user) {
-        return this.owner.getId() == user.getId();
+        return this.owner.getId().equals(user.getId());
     }
 
     public void patchProduct(Product productUpdate) {
