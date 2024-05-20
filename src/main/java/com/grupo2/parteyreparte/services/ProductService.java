@@ -63,7 +63,7 @@ public class ProductService {
         }
 
         this.productRepository.insert(product);
-        loggedUser.publishProduct(product);
+        this.userService.publishProduct(product);
         //TODO: save user
 
         return this.productMapper.mapToProductDTO(product);
@@ -111,7 +111,7 @@ public class ProductService {
 
         product.subscribeUser(user);
         this.productRepository.save(product);
-        user.susbribeProduct(product);
+        userService.subscribeToProduct(product);
 
         return this.productMapper.mapToProductDTO(product);
     }
