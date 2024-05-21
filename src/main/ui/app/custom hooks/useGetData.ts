@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Response } from '../interfaces/IResponse';
 
 // TODO get path from env
-const path = `http://${process.env.BACKEND_INTERNAL_URL}:8080`
+const path = "http://localhost:8080"
 
 export const useGetData = ({ resource } : { resource : string}) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
