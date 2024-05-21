@@ -65,9 +65,9 @@ public class Product {
     public void subscribeUser(User user) {
         this.suscribers.add(user);
 
-        if (this.isFull()) {
-            this.state = ProductState.CLOSED_COMPLETED;
-        }
+    //    if (this.isFull()) {
+    //        this.state = ProductState.CLOSED_COMPLETED;
+    //      }
     }
 
     public void close() {
