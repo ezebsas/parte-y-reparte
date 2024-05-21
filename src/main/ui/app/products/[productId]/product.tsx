@@ -15,15 +15,38 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { IProduct } from "@/interfaces/IProduct";
 import { jwtParser } from "@/utils/jwtParser";
+import { toast, useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 function ProductDetails({ product }: { product: IProduct }) {
   const { data: session } = useSession();
   const sessionToken = session?.user.value!.token;
-
+  const { toast } = useToast();
   const [subscribed, setSubscribed] = useState(false);
+
+  useEffect(() => {
+    if (!product) {
+      return;
+    }
+
+    const suscribeManage = async () => {
+      const userID = jwtParser(sessionToken!).sub;
+
+      if (product.subscribers.some((s) => s.id == userID)) {
+        setSubscribed(true);
+      }
+    };
+
+    suscribeManage();
+  }, [sessionToken, product]);
 
   const handleSubscribe = async () => {
     try {
+
+      toast({
+        title: "Suscribing",
+        description: "Please wait....",
+      })
       const productId = product.id;
       const res = await fetch(
         "http://localhost:8080/api/v1/products/" + productId + "/subscription",
@@ -39,7 +62,16 @@ function ProductDetails({ product }: { product: IProduct }) {
 
       if (res.ok) {
         setSubscribed(true);
+        toast({
+          title: "Suscribed",
+          description: "Congrats!",
+        })
       } else {
+        toast({
+          title: "Uh oh! Something went wrong.",
+          description: "Error subscribing. Please reload the page",
+        })
+        console.log("cheems")
         throw new Error("Error subscribing:" + res.statusText);
       }
     } catch (error) {
@@ -54,8 +86,12 @@ function ProductDetails({ product }: { product: IProduct }) {
     }
   };
 
-    const handleUnsubscribe = async () => {
+  const handleUnsubscribe = async () => {
     try {
+      toast({
+        title: "Unsubscribing",
+        description: "Please wait...",
+      })
       const productId = product.id;
       const res = await fetch(
         "http://localhost:8080/api/v1/users/me/subscriptions/" + productId,
@@ -71,6 +107,10 @@ function ProductDetails({ product }: { product: IProduct }) {
 
       if (res.ok) {
         setSubscribed(false);
+        toast({
+          title: "Unsuscribed",
+          description: "Congrats!",
+        })
       } else {
         throw new Error("Error desubscribing:" + res.statusText);
       }
@@ -82,12 +122,14 @@ function ProductDetails({ product }: { product: IProduct }) {
       }
 
       console.error("Error desubscribing:", message);
+
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: "Error desubscribing. Please reload the page",
+      })
+      
     }
   };
-
-  if (subscribed) {
-    return <h1>Succesfully Subscribed</h1>;
-  }
 
   if (!product) {
     return <div>Loading...</div>;
@@ -176,48 +218,77 @@ function ProductDetails({ product }: { product: IProduct }) {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            {product.subscribers.some(
-              (u) => u.id == jwtParser(sessionToken!).sub
-            ) ? (
+            {
+              // CLOSED PRODUCT
+
               product.state != "OPEN" ? (
+                // MY PRODUCT
+                product.owner.id == jwtParser(sessionToken!).sub ? (
+                  <Button
+                    variant="outline"
+                    className={"bg-green-500 text-white"}
+                    onClick={() => {
+                      window.location.href = `/products/${product.id}/edit`;
+                    }}
+                    disabled={false}
+                  >
+                    Edit
+                  </Button>
+                ) : (
+                  // CLOSED PRODUCT
+                  <Button
+                    variant="outline"
+                    className={"bg-red-500 text-white"}
+                    disabled={true}
+                  >
+                    Closed
+                  </Button>
+                )
+              ) : //OPENED PRODUCT
+              product.owner.id == jwtParser(sessionToken!).sub ? (
+                // MY PRODUCT
+                <Button
+                  variant="outline"
+                  className={"bg-green-500 text-white"}
+                  onClick={() => {
+                    window.location.href = `/products/${product.id}/edit`;
+                  }}
+                  disabled={false}
+                >
+                  Edit
+                </Button>
+              ) : subscribed ? (
+                // Suscribed
                 <Button
                   variant="outline"
                   className={"bg-red-500 text-white"}
+                  onClick={handleUnsubscribe}
+                  disabled={false}
+                >
+                  Unsuscribed
+                </Button>
+              ) : product.maxPeople == product.subscribers.length ? (
+                <Button
+                  variant="outline"
+                  className={"bg-amber-500 text-white"}
                   disabled={true}
                 >
-                  Closed
+                  Full
                 </Button>
-              ) :
-              <Button
-                variant="outline"
-                className={"bg-red-500 text-white"}
-                onClick={handleUnsubscribe}
-                disabled={false}
-              >
-                Unsubscribe
-              </Button>
-            ) : product.owner.id == jwtParser(sessionToken!).sub ? (
-              <Button
-                variant="outline"
-                className={"bg-green-500 text-white"}
-                onClick={() => {
-                  window.location.href = `/products/${product.id}/edit`;
-                }}
-                disabled={false}
-              >
-                Edit
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                className={"bg-blue-500 text-white"}
-                onClick={handleSubscribe}
-              >
-                Subscribe
-              </Button>
-            )}
+              ) : (
+                // Not suscribed
+                <Button
+                  variant="outline"
+                  className={"bg-blue-500 text-white"}
+                  onClick={handleSubscribe}
+                >
+                  Subscribe
+                </Button>
+              )
+            }
           </CardFooter>
         </Card>
+        <Toaster />
       </div>
     </div>
   );
