@@ -16,7 +16,7 @@ export default NextAuth({
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
 
-        const res = await fetch("http://localhost:8080/api/v1/auth/login", {
+        const res = await fetch(`http://${process.env.BACKEND_INTERNAL_URL}:8080/api/v1/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -26,6 +26,7 @@ export default NextAuth({
             password: credentials?.password,
           }),
         });
+        
         const user = await res.json();
 
         if (user && !user.error) {

@@ -29,3 +29,15 @@ services:
       ME_CONFIG_BASICAUTH: "false"
     depends_on:
       - mongo
+  frontend:
+    container_name: frontend
+    image: frontend-img
+    build:
+      context: src/main/ui
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./src/main/ui/.env.local
+    depends_on:
+      - app-server
