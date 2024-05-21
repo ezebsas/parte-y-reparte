@@ -19,16 +19,15 @@ import { jwtParser } from "@/utils/jwtParser";
 function ProductDetails({ product }: { product: IProduct }) {
   const { data: session } = useSession();
   const sessionToken = session?.user.value!.token;
+  const [closed, setClosed] = useState(false)
 
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = async () => {
+  const handleUpdate = async () => {
     try {
       const productId = window.location.pathname.split("/")[2];
       const res = await fetch(
-        "http://localhost:8080/api/v1/products/" + productId + "/subscription",
+        "http://localhost:8080/api/v1/products/" + productId + "/close",
         {
-          method: "POST",
+          method: "PUT",
           mode: "cors",
           headers: {
             Accept: "application/json",
@@ -37,8 +36,9 @@ function ProductDetails({ product }: { product: IProduct }) {
         }
       );
 
+      
       if (res.ok) {
-        setSubscribed(true);
+        setClosed(true);
       } else {
         throw new Error("Error subscribing:" + res.statusText);
       }
@@ -54,41 +54,6 @@ function ProductDetails({ product }: { product: IProduct }) {
     }
   };
 
-    const handleUnsubscribe = async () => {
-    try {
-      const productId = window.location.pathname.split("/")[2];
-      const res = await fetch(
-        "http://localhost:8080/api/v1/users/me/subscriptions/" + productId,
-        {
-          method: "DELETE",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${sessionToken}`,
-          },
-        }
-      );
-
-      if (res.ok) {
-        setSubscribed(false);
-      } else {
-        throw new Error("Error desubscribing:" + res.statusText);
-      }
-    } catch (error) {
-      let message = "Unknown Error";
-
-      if (error instanceof Error) {
-        message = error.message;
-      }
-
-      console.error("Error desubscribing:", message);
-    }
-  };
-
-  if (subscribed) {
-    return <h1>Succesfully Subscribed</h1>;
-  }
-
   if (!product) {
     return <div>Loading...</div>;
   }
@@ -100,10 +65,11 @@ function ProductDetails({ product }: { product: IProduct }) {
     >
       <div style={{ maxHeight: "10vw", maxWidth: "25vw", marginTop: "5rem" }}>
         {product.image ? (
-          <img
+          <Image
+          width={300}
+          height={300}
             src={product.image}
             alt={product.name}
-            style={{ maxWidth: "100%", height: "auto", maxHeight: "10vw" }}
           />
         ) : (
           <p>No image available</p>
@@ -176,43 +142,23 @@ function ProductDetails({ product }: { product: IProduct }) {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            {product.subscribers.some(
-              (u) => u.id == jwtParser(sessionToken!).sub
-            ) ? (
+            {product.state == "OPEN" && !closed ? (
               <Button
-                variant="outline"
-                className={"bg-red-500 text-white"}
-                onClick={handleUnsubscribe}
-                disabled={false}
-              >
-                Unsubscribe
-              </Button>
-            ) : product.owner.id == jwtParser(sessionToken!).sub ? (
-              <Button
+                type="submit"
                 variant="outline"
                 className={"bg-green-500 text-white"}
-                onClick={() => {
-                  window.location.href = `/products/${product.id}/edit`;
-                }}
+                onClick={handleUpdate}
                 disabled={false}
               >
-                Edit
-              </Button>
-            ) : product.state != "OPEN" ? (
-              <Button
-                variant="outline"
-                className={"bg-red-500 text-white"}
-                disabled={true}
-              >
-                Closed
+                Close
               </Button>
             ) : (
               <Button
                 variant="outline"
-                className={"bg-blue-500 text-white"}
-                onClick={handleSubscribe}
+                className={ "bg-red-500 text-white"}
+                disabled={true}
               >
-                Subscribe
+                Closed
               </Button>
             )}
           </CardFooter>

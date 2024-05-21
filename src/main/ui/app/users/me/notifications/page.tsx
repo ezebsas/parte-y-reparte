@@ -1,7 +1,7 @@
 "use client";
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useGetData } from "../../../custom hooks/useGetData";
+import { useGetData } from "../../../../custom hooks/useGetData";
 import NotificationsList from "./notifications-list";
 
 const resource = "/api/v1/users/me/notifications";

@@ -1,11 +1,11 @@
 package com.grupo2.parteyreparte.security.service;
 
+import com.grupo2.parteyreparte.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -22,20 +22,20 @@ public class JwtService {
     @Value("${app.jwt.expiration}")
     private long expirationTime;
 
-    public String extractUsername(String jwtToken) {
+    public String extractSubject(String jwtToken) {
         return extractClaim(jwtToken,Claims::getSubject);
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(User userDetails) {
         return this.generateToken(new HashMap<>(),userDetails);
     }
 
-    public String generateToken(Map<String,Object> extraClaims, UserDetails user) {
+    public String generateToken(Map<String,Object> extraClaims, User user) {
 
         return Jwts
                 .builder()
                 .claims(extraClaims)
-                .subject(user.getUsername())
+                .subject(user.getId())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)

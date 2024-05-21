@@ -1,13 +1,14 @@
 "use client"
  
-import { ProductState } from "@/app/enums/ProductState";
-import { IProduct } from "@/app/interfaces/IProduct";
-import { IUser } from "@/app/interfaces/IUser";
+import { ProductState } from "@/enums/ProductState";
+import { IProduct } from "@/interfaces/IProduct";
+import { IUser } from "@/interfaces/IUser";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link";
+import { statusText } from "@/utils/statusText";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -56,27 +57,10 @@ export const ownercolumns: ColumnDef<IProduct>[] = [
     accessorKey: "state",
     header: "Status",
     cell: ({ row }) => {
-      const state = row.getValue("state");
+      const state : ProductState = row.getValue("state");
 
-      let text = "";
+      const text = statusText(state);
 
-      switch(state) {
-        case "OPEN":
-          text = "🟢 Active";
-          break;
-        case "COMPLETED":
-          text = "🔵 Completed";
-          break;
-        case "INCOMPLETE":
-          text = "🔴 Incomplete";
-          break;
-        case "CANNOT_BE_DISTRIBUTED":
-          text = "⚫ Cannot be distributed";
-          break;
-        default:
-          text = "🟠 Planning";
-          break
-      }
       return <div className="text-left font-medium">{text}</div>
     }
   },
@@ -122,7 +106,7 @@ export const ownercolumns: ColumnDef<IProduct>[] = [
     accessorKey: "id",
     header: "Options",
     cell: ({ row }) => {
-      const id = parseFloat(row.getValue("id"))
+      const id : string = row.getValue("id")
 
       return <Link href={`/products/${id}`}>
         <Button variant="outline">🔧</Button>

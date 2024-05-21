@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
-import { Response } from "../interfaces/IResponse";
+import { Response } from "../../interfaces/IResponse";
 
 export default function Home() {
   const { data: session } = useSession();

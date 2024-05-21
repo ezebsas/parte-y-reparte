@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { fetchData } from "next-auth/client/_utils";
 import { useEffect, useState } from "react";
 import ProductDetails from "./product";
-import { IProduct } from "@/app/interfaces/IProduct";
+import { IProduct } from "@/interfaces/IProduct";
 
 
 

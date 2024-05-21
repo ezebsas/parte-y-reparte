@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ProductDataGrid } from "./product-data-grid";
 import { productColumn } from "./product-column";
-import { useGetData } from "../custom hooks/useGetData";
+import { useGetData } from "../../custom hooks/useGetData";
 import { redirect } from "next/navigation";
 
 const RESOURCE = "/api/v1/products";

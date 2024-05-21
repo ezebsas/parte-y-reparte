@@ -2,7 +2,7 @@
  
 import { ProductCard } from "@/components/ui/ProductCard";
 import { ColumnDef } from "@tanstack/react-table"
-import { IProduct } from "../interfaces/IProduct";
+import { IProduct } from "../../interfaces/IProduct";
 
 export const productColumn: ColumnDef<IProduct>[] = [
   {

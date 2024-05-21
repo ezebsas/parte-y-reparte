@@ -2,7 +2,7 @@
 import { OwnerDataTable } from "../products/owner-data-table";
 import { ownercolumns } from "../products/owner-colums";
 import { redirect } from "next/navigation";
-import { useGetData } from "../../../custom hooks/useGetData";
+import { useGetData } from "../../../../custom hooks/useGetData";
 
 //TODO maybe get path from .env
 const resource = "/api/v1/users/me/subscriptions";

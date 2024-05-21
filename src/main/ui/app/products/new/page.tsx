@@ -45,8 +45,9 @@ const formSchema = z.object({
   totalCost: z.number().min(0, {
     message: "Total cost must be a non-negative number.",
   }),
-  subscribers: z.array(z.string()),
-  state: z.enum(["OPEN", "CLOSED"]),
+  // TODO preguntar a ale
+  //subscribers: z.array(z.string()),
+  //state: z.enum(["OPEN", "CLOSED"]),
 });
 
 
@@ -280,7 +281,7 @@ export default function ProductForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" onClick={handleFormSubmit}>Submit</Button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );

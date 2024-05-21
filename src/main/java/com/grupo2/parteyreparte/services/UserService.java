@@ -34,8 +34,8 @@ public class UserService {
     }
 
     public String getLoggedUserId() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return user.getId();
+        String id = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return id;
     }
 
     public User getLoggedUser() {

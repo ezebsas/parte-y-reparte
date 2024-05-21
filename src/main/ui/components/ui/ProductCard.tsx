@@ -1,5 +1,6 @@
-import { ProductState } from "@/app/enums/ProductState";
-import { IProduct } from "@/app/interfaces/IProduct";
+import { ProductState } from "@/enums/ProductState";
+import { IProduct } from "@/interfaces/IProduct";
+import { statusText } from "@/utils/statusText";
 import Image from "next/image";
 import React, { MouseEventHandler } from "react";
 
@@ -43,31 +44,6 @@ const calculateDaysDifference = (dateString: string): string => {
 };
 
 export const ProductCard = ({ product, handleClic }: productCardI) => {
-
-  const statusText = (state : ProductState) : string => {
-
-    let text = "";
-
-    switch(state) {
-      case "OPEN":
-        text = "🟢 Active";
-        break;
-      case "COMPLETED":
-        text = "🔵 Completed";
-        break;
-      case "INCOMPLETE":
-        text = "🔴 Incomplete";
-        break;
-      case "CANNOT_BE_DISTRIBUTED":
-        text = "⚫ Cannot be distributed";
-        break;
-      default:
-        text = "🟠 Planning";
-        break
-    }
-
-    return text;
-  }
 
   const bodyText = `Amount : ${product.quantity} ${product.unit.toLowerCase()}\nMin subs: ${product.minPeople}\nMax subs: ${product.maxPeople}`;
 

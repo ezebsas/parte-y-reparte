@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetData } from "@/app/custom hooks/useGetData";
+import { useGetData } from "@/custom hooks/useGetData";
 import Link from "@/node_modules/next/link";
 import { Button ,buttonVariants} from "@/components/ui/button";
 import {
