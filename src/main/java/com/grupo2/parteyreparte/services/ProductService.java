@@ -121,6 +121,14 @@ public class ProductService {
         return this.productMapper.mapToProductDTO(product);
     }
 
+    public void unsubscribeLoggedUser(String productId){
+        this.userService.deleteUserProductById(productId);
+        Product product = this.getProductById(productId);
+        User user = userService.getLoggedUser();
+        product.unsubscribe(user.getId());
+        this.productRepository.save(product);
+    }
+
     public List<UserDTO> getParticipants(String id) {
         Product product = this.getProductById(id);
         return product.getSuscribers().stream().map(this.userMapper::mapToUserDTO).collect(Collectors.toList());

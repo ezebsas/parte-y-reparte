@@ -86,11 +86,9 @@ public class Product {
         return this.unit != ProductUnit.UNIT || this.quantity % this.suscribers.size() == 0;
     }
 
-    public void notifyUsers() {
-        Notification notification = new Notification("Product closed", LocalDateTime.now(), this);
-        for (User user : this.suscribers) {
-            user.notifyClosedProduct(notification);
-        }
+    public void unsubscribe(String userId) {
+        List<User> subscribers = this.getSuscribers();
+        this.setSuscribers(subscribers.stream().filter(u -> !u.getId().equals(userId)).toList() );
     }
 
     public boolean isOwner(User user) {
