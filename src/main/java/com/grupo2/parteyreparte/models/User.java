@@ -2,6 +2,7 @@ package com.grupo2.parteyreparte.models;
 
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,8 +26,11 @@ public class User implements UserDetails {
     private int age;
     private String email;
     private String password;
+    @DBRef
     private List<Product> productsPublished;
+    @DBRef
     private List<Product> productsSubscribed;
+    @DBRef
     private List<Notification> notifications;
 
 

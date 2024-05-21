@@ -4,6 +4,7 @@ import com.grupo2.parteyreparte.dtos.ProductDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -27,8 +28,10 @@ public class Product {
     private int maxPeople;
     private int minPeople;
     private Double totalCost;
+    @DBRef
     private List<User> suscribers;
     private ProductState state;
+    @DBRef
     private User owner;
     private ProductUnit unit;
     private Double quantity;

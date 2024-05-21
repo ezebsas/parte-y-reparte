@@ -7,6 +7,7 @@ import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.mappers.NotificationMapper;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
 import com.grupo2.parteyreparte.mappers.UserMapper;
+import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.UserRepository;
@@ -53,6 +54,12 @@ public class UserService {
     public  void subscribeToProduct(Product product){
         User user = this.getLoggedUser();
         user.susbribeProduct(product);
+        this.userRepository.save(user);
+    }
+
+    public  void notifyUser(User user, Notification notification){
+
+        user.notifyClosedProduct(notification);
         this.userRepository.save(user);
     }
 

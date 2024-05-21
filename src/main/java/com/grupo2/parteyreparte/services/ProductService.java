@@ -7,10 +7,13 @@ import com.grupo2.parteyreparte.exceptions.ProductFullException;
 import com.grupo2.parteyreparte.exceptions.UnauthorizedOperationException;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
 import com.grupo2.parteyreparte.mappers.UserMapper;
+import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
+import com.grupo2.parteyreparte.repositories.NotificationRepository;
 import com.grupo2.parteyreparte.repositories.ProductRepositoryDepre;
 import com.grupo2.parteyreparte.repositories.ProductRepository;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,14 +40,16 @@ public class ProductService {
     private final UserService userService;
     private final ProductMapper productMapper;
     private final UserMapper  userMapper;
+    private final NotificationRepository notificationRepository;
 
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper, UserMapper userMapper, UserService userService) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, UserMapper userMapper, UserService userService, NotificationRepository notificationRepository) {
         this.productMapper = productMapper;
         this.userMapper = userMapper;
         this.userService = userService;
         this.productRepository = productRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public List<ProductDTO> getAll() {
@@ -130,7 +135,14 @@ public class ProductService {
         }
         product.close();
         this.productRepository.save(product);
-        product.notifyUsers();
+        this.notifyUsers(product);
         return this.productMapper.mapToProductDTO(product);
+    }
+    public void notifyUsers(Product product) {
+        Notification notification = new Notification("Product closed", LocalDateTime.now(), product);
+        this.notificationRepository.save(notification);
+        for (User user : product.getSuscribers()) {
+            this.userService.notifyUser(user, notification);
+        }
     }
 }
