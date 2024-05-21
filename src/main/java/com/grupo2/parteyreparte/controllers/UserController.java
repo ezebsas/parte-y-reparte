@@ -6,6 +6,7 @@ import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Notification;
+import com.grupo2.parteyreparte.services.ProductService;
 import com.grupo2.parteyreparte.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,11 +24,13 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final ProductService productService;
 
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper) {
+    public UserController(UserService userService, UserMapper userMapper, ProductService productService) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.productService = productService;
     }
 
     @GetMapping("/users/me")
@@ -63,7 +66,7 @@ public class UserController {
     @DeleteMapping("/users/me/subscriptions/{id}")
     public ResponseEntity< ApiResponse<List<ProductDTO>> > getCurrentUserProducts(@PathVariable("id") String productId){
 
-        userService.deleteUserProductById(productId);
+        productService.unsubscribeLoggedUser(productId);
         ApiResponse<List<ProductDTO>> response = new ApiResponse<>();
         response.setMessage("User's subscriptions after deletion");
         response.setValue(userService.getLoggedUserProductsSubscribedDTO());
