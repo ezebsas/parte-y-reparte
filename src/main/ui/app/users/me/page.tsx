@@ -1,8 +1,8 @@
 "use client";
 
 import { useGetData } from "@/app/custom hooks/useGetData";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import Link from "@/node_modules/next/link";
+import { Button ,buttonVariants} from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -82,7 +82,12 @@ export default function Home() {
   }
 
   return (
-    <section className="flex justify-center">
+    <section className="flex flex-col justify-center items-center">
+      <div className="m-2">
+        <Link href="/users/me/notifications" className={buttonVariants({ variant: "outline" })}>Notificaciones</Link>
+        <Link href="/users/me/products" className={buttonVariants({ variant: "outline" })}>Productos</Link>
+        <Link href="/users/me/subscriptions" className={buttonVariants({ variant: "outline" })}>Suscripciones</Link>
+      </div>
       {error ? (
         "Try again later"
       ) : isLoading ? (
