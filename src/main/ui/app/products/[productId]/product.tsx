@@ -24,7 +24,7 @@ function ProductDetails({ product }: { product: IProduct }) {
 
   const handleSubscribe = async () => {
     try {
-      const productId = window.location.pathname.split("/")[2];
+      const productId = product.id;
       const res = await fetch(
         "http://localhost:8080/api/v1/products/" + productId + "/subscription",
         {
@@ -56,7 +56,7 @@ function ProductDetails({ product }: { product: IProduct }) {
 
     const handleUnsubscribe = async () => {
     try {
-      const productId = window.location.pathname.split("/")[2];
+      const productId = product.id;
       const res = await fetch(
         "http://localhost:8080/api/v1/users/me/subscriptions/" + productId,
         {
@@ -179,6 +179,15 @@ function ProductDetails({ product }: { product: IProduct }) {
             {product.subscribers.some(
               (u) => u.id == jwtParser(sessionToken!).sub
             ) ? (
+              product.state != "OPEN" ? (
+                <Button
+                  variant="outline"
+                  className={"bg-red-500 text-white"}
+                  disabled={true}
+                >
+                  Closed
+                </Button>
+              ) :
               <Button
                 variant="outline"
                 className={"bg-red-500 text-white"}
@@ -197,14 +206,6 @@ function ProductDetails({ product }: { product: IProduct }) {
                 disabled={false}
               >
                 Edit
-              </Button>
-            ) : product.state != "OPEN" ? (
-              <Button
-                variant="outline"
-                className={"bg-red-500 text-white"}
-                disabled={true}
-              >
-                Closed
               </Button>
             ) : (
               <Button
