@@ -62,10 +62,11 @@ public class ProductService {
             throw new ProductFullException("PRODUCT_BAD_DATE");
         }
 
-        //loggedUser.publishProduct(product); DA OVERFLOW CHEQUEAR
+        this.productRepository.insert(product);
+        this.userService.publishProduct(product);
         //TODO: save user
 
-        return this.productMapper.mapToProductDTO(this.productRepository.insert(product));
+        return this.productMapper.mapToProductDTO(product);
     }
 
     public ProductDTO getProductDTOById(String id) {
@@ -110,7 +111,7 @@ public class ProductService {
 
         product.subscribeUser(user);
         this.productRepository.save(product);
-        user.susbribeProduct(product);
+        userService.subscribeToProduct(product);
 
         return this.productMapper.mapToProductDTO(product);
     }
@@ -124,12 +125,12 @@ public class ProductService {
         Product product = this.getProductById(id);
         User loggedUser = this.userService.getLoggedUser();
 
-        if (product.isOwner(loggedUser)) {
-            product.close();
-            this.productRepository.save(product);
-            return this.productMapper.mapToProductDTO(product);
-        } else {
+        if(!product.isOwner(loggedUser)){
             throw new UnauthorizedOperationException(USER_DOES_NOT_HAVE_PERMISSION);
         }
+        product.close();
+        this.productRepository.save(product);
+        product.notifyUsers();
+        return this.productMapper.mapToProductDTO(product);
     }
 }

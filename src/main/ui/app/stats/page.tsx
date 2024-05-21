@@ -43,10 +43,10 @@ export default function Home() {
           <CardDescription>Estadisticas de usuarios y productos</CardDescription>
         </CardHeader>
         <CardContent>
-          <p>Cantidad de usuarios únicos: {uniqueUsers && uniqueUsers.value}</p>
+          <p>Cantidad de usuarios únicos que interactuaron: {uniqueUsers && uniqueUsers.value}</p>
         </CardContent>
         <CardFooter>
-          <p>Cantidad de publicaciones: {amountPublications && amountPublications.value}</p>
+          <p>Cantidad total de publicaciones: {amountPublications && amountPublications.value}</p>
         </CardFooter>
       </Card>
     </div>
