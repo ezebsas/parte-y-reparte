@@ -12,29 +12,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { IProduct } from "@/interfaces/IProduct";
 import { jwtParser } from "@/utils/jwtParser";
+import { putDataFetch } from "@/utils/fetchers";
+import { parteYRepartePaths } from "@/utils/paths";
 
 function ProductDetails({ product }: { product: IProduct }) {
-  const { data: session } = useSession();
-  const sessionToken = session?.user.value!.token;
   const [closed, setClosed] = useState(false)
+  const params = useParams<{ productId: string }>();
 
   const handleUpdate = async () => {
     try {
-      const productId = window.location.pathname.split("/")[2];
-      const res = await fetch(
-        "http://localhost:8080/api/v1/products/" + productId + "/close",
-        {
-          method: "PUT",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${sessionToken}`,
-          },
-        }
-      );
+      const productId = params?.productId!;
+      const res = await putDataFetch(parteYRepartePaths.products.close(productId));
 
       
       if (res.ok) {

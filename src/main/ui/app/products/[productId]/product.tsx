@@ -17,6 +17,8 @@ import { IProduct } from "@/interfaces/IProduct";
 import { jwtParser } from "@/utils/jwtParser";
 import { toast, useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { deleteDataFetch, postDataFetch } from "@/utils/fetchers";
+import { parteYRepartePaths } from "@/utils/paths";
 
 function ProductDetails({ product }: { product: IProduct }) {
   const { data: session } = useSession();
@@ -48,17 +50,7 @@ function ProductDetails({ product }: { product: IProduct }) {
         description: "Please wait....",
       })
       const productId = product.id;
-      const res = await fetch(
-        "http://localhost:8080/api/v1/products/" + productId + "/subscription",
-        {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${sessionToken}`,
-          },
-        }
-      );
+      const res = await postDataFetch(parteYRepartePaths.products.subscription.base(productId),"");
 
       if (res.ok) {
         setSubscribed(true);
@@ -93,17 +85,7 @@ function ProductDetails({ product }: { product: IProduct }) {
         description: "Please wait...",
       })
       const productId = product.id;
-      const res = await fetch(
-        "http://localhost:8080/api/v1/users/me/subscriptions/" + productId,
-        {
-          method: "DELETE",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${sessionToken}`,
-          },
-        }
-      );
+      const res = await deleteDataFetch(parteYRepartePaths.me.suscriptions.details(productId));
 
       if (res.ok) {
         setSubscribed(false);

@@ -7,6 +7,8 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { postDataFetch } from "@/utils/fetchers";
+import { parteYRepartePaths } from "@/utils/paths";
 
 const RegisterPage = () => {
   const [errors, setErrors] = useState<string[]>([]);
@@ -20,20 +22,12 @@ const RegisterPage = () => {
     event.preventDefault();
     setErrors([]);
 
-    const res = await fetch("http://localhost:8080/api/v1/auth/register",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          age,
-          email,
-          password,
-        }),
-      }
-    );
+    const res = await postDataFetch(parteYRepartePaths.register,{
+      name,
+      age,
+      email,
+      password,
+    })
 
     const responseAPI = await res.json();
 

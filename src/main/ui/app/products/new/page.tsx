@@ -13,12 +13,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useSession } from "next-auth/react";
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FormEvent, useState } from "react";
 import { redirect } from 'next/navigation'
+import { postDataFetch } from "@/utils/fetchers";
+import { parteYRepartePaths } from "@/utils/paths";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -53,23 +53,13 @@ const formSchema = z.object({
 
 
 export default function ProductForm() {
-  const { data: session } = useSession();
-  const sessionToken = session?.user.value?.token;
   const form = useForm({ resolver: zodResolver(formSchema) });
   const [redir, setRedirect] = useState(false);
 
   const onSubmit = async () => {
     try {
       const formData = form.getValues();
-      const res = await fetch("http://localhost:8080/api/v1/products", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionToken}`,
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await postDataFetch(parteYRepartePaths.products.base,formData);
 
       if(res.ok){
         setRedirect(true);

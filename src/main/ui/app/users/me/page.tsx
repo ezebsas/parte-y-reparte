@@ -19,8 +19,9 @@ import { Terminal } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-
-const RESOURCE = "/api/v1/users/me";
+import SWR from "swr"
+import { getDataFetcher, patchDataFetch } from "@/utils/fetchers";
+import { parteYRepartePaths } from "@/utils/paths";
 
 type UserData = {
   id: number;
@@ -30,19 +31,17 @@ type UserData = {
 };
 
 export default function Home() {
-  const { authError, data, error, isLoading } = useGetData({
-    resource: RESOURCE,
-  });
+
+  const { data, error, isLoading } = SWR("user-me", () => getDataFetcher(parteYRepartePaths.me.base));
+
   const [userData, setUserData] = useState<UserData>({
     id: 0,
     name: "",
     age: 0,
     email: "",
   });
-  const { data: session } = useSession();
+  
   const { toast } = useToast()
-
-  const sessionToken = session?.user?.value?.token;
 
   useEffect(() => {
     if (!data?.value) {
@@ -59,17 +58,9 @@ export default function Home() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:8080/api/v1/users/me", {
-      method: "PATCH",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionToken}`,
-      },
-      body: JSON.stringify({ name: userData.name }),
-    });
+    const res = await patchDataFetch(parteYRepartePaths.me.base,{name: userData.name});
 
-    if (res.status == 200) {
+    if (res.ok) {
       toast({
         title: "Name changed!",
         description: `You change your name successfully to ${userData.name}` ,
@@ -77,9 +68,6 @@ export default function Home() {
     }
   };
 
-  if (authError) {
-    redirect("/api/auth/signin");
-  }
 
   return (
     <section className="flex flex-col justify-center items-center">

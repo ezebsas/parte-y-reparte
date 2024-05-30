@@ -3,21 +3,17 @@ import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useGetData } from "../../../../custom hooks/useGetData";
 import NotificationsList from "./notifications-list";
-
-const resource = "/api/v1/users/me/notifications";
+import { parteYRepartePaths } from "@/utils/paths";
+import SWR from "swr"
+import { getDataFetcher } from "@/utils/fetchers";
 
 export default function Home() {
 
-  const {
-    authError,
-    error,
-    data: notificationsResponse,
-    isLoading,
-  } = useGetData({ resource: resource });
+  const { data: notificationsResponse, error, isLoading } = SWR("my-notifications",() => getDataFetcher(parteYRepartePaths.me.notifications));
 
-  if (authError) {
+  /*if (authError) {
     redirect("/api/auth/signin");
-  }
+  }*/
 
   return (
       <section className="flex flex-col items-center gap-x-8 gap-y-4">

@@ -5,24 +5,19 @@ import { ProductDataGrid } from "./product-data-grid";
 import { productColumn } from "./product-column";
 import { useGetData } from "../../custom hooks/useGetData";
 import { redirect } from "next/navigation";
-
-const RESOURCE = "/api/v1/products";
+import SWR from "swr";
+import { getDataFetcher } from "@/utils/fetchers";
+import Link from "next/link";
+import { parteYRepartePaths } from "@/utils/paths";
 
 export default function Home() {
   const {
-    authError,
+    data: productData,
     error,
-    data: productResponse,
     isLoading,
-  } = useGetData({ resource: RESOURCE });
-
-  const handleRedirect = () => {
-    window.location.href = `/products/new`;
-  };
-
-  if (authError) {
-    redirect("/api/auth/signin");
-  }
+  } = SWR("getAllProducts", () =>
+    getDataFetcher(parteYRepartePaths.products.base)
+  );
 
   return (
     <div className="flex flex-col content-center text-center my-2">
@@ -30,19 +25,16 @@ export default function Home() {
       {isLoading ? (
         "Loading"
       ) : error ? (
-        "Error. Please try again later"
+        error.message
       ) : (
         <>
-          <ProductDataGrid
-            columns={productColumn}
-            data={productResponse?.value}
-          />
+          <ProductDataGrid columns={productColumn} data={productData.value} />
           <Button
+            asChild
             variant="outline"
             className={"bg-blue-500 text-white"}
-            onClick={handleRedirect}
           >
-            Add Product
+            <Link href={"/products/new"}>Add Product</Link>
           </Button>
         </>
       )}

@@ -3,40 +3,23 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
 import { Response } from "../../interfaces/IResponse";
+import SWR from "swr"
+import { getDataFetcher } from "@/utils/fetchers";
+import { parteYRepartePaths } from "@/utils/paths";
 
 export default function Home() {
   const { data: session } = useSession();
-  const [uniqueUsers, setUniqueUsers]= useState<Response>();
-  const [amountPublications, setAmountPublications]= useState<Response>();
 
-  const fetchUniqueUsers = async () => {
-    const res = await fetch("http://localhost:8080/api/v1/stats/unique-users", {
-      method: "Get",
-      headers: {
-        authorization: `Bearer ${session?.user.value?.token}`,
-      },
-    });
+  const { data : uniqueUsers, isLoading : uniqueUsersIsLoading, error : uniqueUsersError} = SWR("unique-users",() => getDataFetcher(parteYRepartePaths.stats.uniqueUsers));
+  const { data : amountPublications, isLoading: amountPubliIsLoading, error: amountPubliError } = SWR("publications-amount",() => getDataFetcher(parteYRepartePaths.stats.publicationAmount));
 
-    const response = await res.json();
-    setUniqueUsers(response);
-  };
-  const fetchAmountPublications = async () => {
-    const res = await fetch("http://localhost:8080/api/v1/stats/publications", {
-      method: "Get",
-      headers: {
-        authorization: `Bearer ${session?.user.value?.token}`,
-      },
-    });
-
-    const response = await res.json();
-    setAmountPublications(response);
-  };
-  useEffect(()=> {
-    fetchUniqueUsers();
-    fetchAmountPublications();
-  }, [])
   return (
     <div className="flex justify-center m-5">
+      {uniqueUsersIsLoading || amountPubliIsLoading ? (
+        "Loading"
+      ) : uniqueUsersError || amountPubliError ? (
+        uniqueUsersError.message
+      ) : (
       <Card className="min-w-96">
         <CardHeader>
           <CardTitle>Estadísticas</CardTitle>
@@ -48,7 +31,8 @@ export default function Home() {
         <CardFooter>
           <p>Cantidad total de publicaciones: {amountPublications && amountPublications.value}</p>
         </CardFooter>
-      </Card>
+      </Card>)
+      }
     </div>
   );
 }
