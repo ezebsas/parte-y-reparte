@@ -1,3 +1,5 @@
+import { postDataFetch } from "@/utils/fetchers";
+import { parteYRepartePaths } from "@/utils/paths";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 export default NextAuth({
@@ -16,15 +18,9 @@ export default NextAuth({
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
 
-        const res = await fetch(`http://${process.env.BACKEND_INTERNAL_URL}:8080/api/v1/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: credentials?.email,
-            password: credentials?.password,
-          }),
+        const res = await postDataFetch(parteYRepartePaths.login,{
+          email: credentials?.email,
+          password: credentials?.password,
         });
         
         const user = await res.json();

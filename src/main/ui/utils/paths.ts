@@ -21,5 +21,6 @@ export const parteYRepartePaths = {
     },
     notifications: "/users/me/notifications"
   },
-  register: "/auth/register"
+  register: "/auth/register",
+  login: "/auth/login"
 }

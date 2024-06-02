@@ -1,6 +1,6 @@
 import { getSession } from "next-auth/react";
 
-const ENDPOINT = "http://localhost:8080/api/v1"
+const ENDPOINT = `http://${process.env.NEXT_PUBLIC_BACKEND_INTERNAL_URL}:8080/api/v1`
 
 export const getDataFetcher = async (RESOURCE : string) => {
 
