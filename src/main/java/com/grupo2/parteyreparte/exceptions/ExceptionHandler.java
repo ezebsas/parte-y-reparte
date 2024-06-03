@@ -52,6 +52,14 @@ public class ExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(RuntimeException .class)
+    public ResponseEntity<ApiResponse<String>> handleRuntimeException(RuntimeException  e) {
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setMessage("Error");
+        response.setValue(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<String>> handleException(Exception e) {
         ApiResponse<String> response = new ApiResponse<>();
@@ -60,3 +68,6 @@ public class ExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
+
+
+

@@ -4,6 +4,7 @@ import com.grupo2.parteyreparte.dtos.ProductDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -35,6 +36,8 @@ public class Product {
     private User owner;
     private ProductUnit unit;
     private Double quantity;
+    @Version
+    private Long version;
 
     public Product(String name, String image, int maxPeople, int minPeople, Double totalCost, Double quantity, ProductUnit unit) {
         this.name = name;
