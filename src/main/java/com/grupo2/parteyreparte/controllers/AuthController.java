@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@CrossOrigin(value = "http://localhost:3000")
+@CrossOrigin(value = "*")
 @RequestMapping("/api/v1/auth")
 @AllArgsConstructor
 @Tag(name = "Authentication")

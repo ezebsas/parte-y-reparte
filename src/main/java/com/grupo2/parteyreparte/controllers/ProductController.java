@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(value = "http://localhost:3000")
+@CrossOrigin(value = "*")
 @RequestMapping("/api/v1/products")
 @SecurityRequirement(name = "BearerAuth")
 @Tag(name = "Products")

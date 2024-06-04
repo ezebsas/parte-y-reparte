@@ -33,6 +33,11 @@ Y en la carpeta /src/main/ui hay que copiar el archivo .env.local
 * [Docker](https://docker.com/) - Usado para generar imagenes y containers
 
 
+## Documentado con Swagger
+
+* Se puede consultar los endpoints al momento de levantar la aplicación en la ruta "/swagger-ui.html"
+
+
 ## Autores ✒️
 
 
