@@ -1,6 +1,5 @@
 "use client";
 
-import { useGetData } from "@/custom hooks/useGetData";
 import Link from "@/node_modules/next/link";
 import { Button ,buttonVariants} from "@/components/ui/button";
 import {
@@ -71,7 +70,7 @@ export default function Home() {
 
   return (
     <section className="flex flex-col justify-center items-center">
-      <div className="m-2">
+      <div className="m-2 flex flex-row">
         <Link href="/users/me/notifications" className={buttonVariants({ variant: "outline" })}>Notificaciones</Link>
         <Link href="/users/me/products" className={buttonVariants({ variant: "outline" })}>Productos</Link>
         <Link href="/users/me/subscriptions" className={buttonVariants({ variant: "outline" })}>Suscripciones</Link>

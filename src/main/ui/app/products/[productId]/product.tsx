@@ -12,13 +12,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { IProduct } from "@/interfaces/IProduct";
 import { jwtParser } from "@/utils/jwtParser";
-import { toast, useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { deleteDataFetch, postDataFetch } from "@/utils/fetchers";
 import { parteYRepartePaths } from "@/utils/paths";
+import { IProduct } from "@/interfaces/parte-y-reparte-interfaces";
 
 function ProductDetails({ product }: { product: IProduct }) {
   const { data: session } = useSession();
@@ -122,9 +121,12 @@ function ProductDetails({ product }: { product: IProduct }) {
       className="product-info-container"
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <div style={{ maxHeight: "10vw", maxWidth: "25vw", marginTop: "5rem" }}>
+      <div className="my-5">
         {product.image ? (
-          <img
+          <Image
+            className="rounded-lg object-cover min-h-80 max-h-80"
+            width={300}
+            height={300}
             src={product.image}
             alt={product.name}
             style={{ maxWidth: "100%", height: "auto", maxHeight: "10vw" }}
@@ -139,7 +141,7 @@ function ProductDetails({ product }: { product: IProduct }) {
           flexDirection: "column",
           alignItems: "center",
           width: "100%",
-          padding: "5rem",
+          padding: "1",
           boxSizing: "border-box",
         }}
       >
@@ -184,7 +186,7 @@ function ProductDetails({ product }: { product: IProduct }) {
               <div className="flex mb-2">
                 <span className="font-bold mr-2">Deadline:</span>
                 <span>
-                  {product.deadline ? product.deadline : "Not specified"}
+                  {new Date(product.deadline).toUTCString()}
                 </span>
               </div>
               <div className="flex mb-2">

@@ -3,8 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { ProductDataGrid } from "./product-data-grid";
 import { productColumn } from "./product-column";
-import { useGetData } from "../../custom hooks/useGetData";
-import { redirect } from "next/navigation";
 import SWR from "swr";
 import { getDataFetcher } from "@/utils/fetchers";
 import Link from "next/link";

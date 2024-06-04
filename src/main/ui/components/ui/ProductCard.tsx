@@ -1,5 +1,4 @@
-import { ProductState } from "@/enums/ProductState";
-import { IProduct } from "@/interfaces/IProduct";
+import { IProduct } from "@/interfaces/parte-y-reparte-interfaces";
 import { statusText } from "@/utils/statusText";
 import Image from "next/image";
 import React, { MouseEventHandler } from "react";
@@ -9,9 +8,9 @@ interface productCardI {
   handleClic: MouseEventHandler<HTMLDivElement>;
 }
 
-const calculateDaysDifference = (dateString: string): string => {
+const calculateDaysDifference = (date: Date): string => {
   // Convert the input string to a Date object
-  const inputDate = new Date(dateString);
+  const inputDate = new Date(date);
 
   // Ensure the input string is a valid date
   if (isNaN(inputDate.getTime())) {

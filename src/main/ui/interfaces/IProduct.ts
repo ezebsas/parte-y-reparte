@@ -1,6 +1,6 @@
 import { ProductState } from "../enums/ProductState";
 import { ProductUnit } from "../enums/ProductUnit";
-import { IUser } from "./IUser";
+import { IUser } from "./parte-y-reparte-interfaces";
 
 export interface IProduct {
   id: string;

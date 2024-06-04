@@ -1,8 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
-import { Response } from "../../interfaces/IResponse";
 import SWR from "swr"
 import { getDataFetcher } from "@/utils/fetchers";
 import { parteYRepartePaths } from "@/utils/paths";

@@ -1,14 +1,13 @@
 "use client"
  
 import { ProductState } from "@/enums/ProductState";
-import { IProduct } from "@/interfaces/IProduct";
-import { IUser } from "@/interfaces/IUser";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link";
 import { statusText } from "@/utils/statusText";
+import { IProduct, IUser } from "@/interfaces/parte-y-reparte-interfaces";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.

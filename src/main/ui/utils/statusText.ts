@@ -1,6 +1,6 @@
-import { ProductState } from "@/enums/ProductState";
+import { IProductState } from "@/interfaces/parte-y-reparte-interfaces";
 
-export const statusText = (state : ProductState) : string => {
+export const statusText = (state : IProductState) : string => {
 
   let text = "";
 

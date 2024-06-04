@@ -4,19 +4,16 @@ import Image from "next/image";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import { redirect, useParams } from "next/navigation";
-import { IProduct } from "@/interfaces/IProduct";
-import { jwtParser } from "@/utils/jwtParser";
+import { useParams } from "next/navigation";
 import { putDataFetch } from "@/utils/fetchers";
 import { parteYRepartePaths } from "@/utils/paths";
+import { IProduct } from "@/interfaces/parte-y-reparte-interfaces";
 
 function ProductDetails({ product }: { product: IProduct }) {
   const [closed, setClosed] = useState(false)
@@ -117,7 +114,7 @@ function ProductDetails({ product }: { product: IProduct }) {
               <div className="flex mb-2">
                 <span className="font-bold mr-2">Deadline:</span>
                 <span>
-                  {product.deadline ? product.deadline : "Not specified"}
+                  {new Date(product.deadline).toUTCString()}
                 </span>
               </div>
               <div className="flex mb-2">

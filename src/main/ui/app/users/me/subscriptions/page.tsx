@@ -1,8 +1,6 @@
 "use client";
 import { OwnerDataTable } from "../products/owner-data-table";
 import { ownercolumns } from "../products/owner-colums";
-import { redirect } from "next/navigation";
-import { useGetData } from "../../../../custom hooks/useGetData";
 import SWR from "swr"
 import { getDataFetcher } from "@/utils/fetchers";
 import { parteYRepartePaths } from "@/utils/paths";

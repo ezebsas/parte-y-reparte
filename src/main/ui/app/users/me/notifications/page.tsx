@@ -1,7 +1,4 @@
 "use client";
-import { redirect } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useGetData } from "../../../../custom hooks/useGetData";
 import NotificationsList from "./notifications-list";
 import { parteYRepartePaths } from "@/utils/paths";
 import SWR from "swr"

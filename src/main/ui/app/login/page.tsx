@@ -1,23 +1,24 @@
 "use client";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { AlertCircle } from "lucide-react";
 
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const LoginPage = () => {
-  const [errors, setErrors] = useState<string[]>([]);
+  const [error, setError] = useState<number>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setErrors([]);
 
     const responseNextAuth = await signIn("credentials", {
       email,
@@ -27,7 +28,7 @@ const LoginPage = () => {
 
     console.log(responseNextAuth);
     if (responseNextAuth?.error) {
-      setErrors(responseNextAuth.error.split(","));
+      setError(responseNextAuth.status);
       return;
     }
 
@@ -35,7 +36,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="flex items-center flex-col ">
       <form onSubmit={handleSubmit}>
       <Card className="w-full max-w-sm">
         <CardHeader>
@@ -66,15 +67,18 @@ const LoginPage = () => {
       </Card>
       </form>
 
-      {errors.length > 0 && (
+      {error == 401 && (
         <div className="alert alert-danger mt-2">
-          <ul className="mb-0">
-            {errors.map((error) => (
-              <li key={error}>{error}</li>
-            ))}
-          </ul>
+          <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                Wrong username or password.
+              </AlertDescription>
+            </Alert>
         </div>
       )}
+
     </div>
   );
 };

@@ -1,8 +1,8 @@
 "use client"
  
 import { ProductCard } from "@/components/ui/ProductCard";
+import { IProduct } from "@/interfaces/parte-y-reparte-interfaces";
 import { ColumnDef } from "@tanstack/react-table"
-import { IProduct } from "../../interfaces/IProduct";
 
 export const productColumn: ColumnDef<IProduct>[] = [
   {

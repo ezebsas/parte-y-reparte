@@ -1,9 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
-import { fetchData } from "next-auth/client/_utils";
-import { useEffect, useState } from "react";
 import ProductDetails from "./product";
-import { IProduct } from "@/interfaces/IProduct";
 import SWR from "swr";
 import { useParams } from "next/navigation";
 import { parteYRepartePaths } from "@/utils/paths";
