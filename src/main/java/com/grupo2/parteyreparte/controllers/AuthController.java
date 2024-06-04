@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.controllers;
 
+import com.grupo2.parteyreparte.api.AuthApi;
 import com.grupo2.parteyreparte.dtos.AuthRequestDTO;
 import com.grupo2.parteyreparte.dtos.AuthResponseDTO;
 import com.grupo2.parteyreparte.dtos.ErrorResponseDTO;
@@ -23,8 +24,7 @@ import java.net.URI;
 @CrossOrigin(value = "*")
 @RequestMapping("/api/v1/auth")
 @AllArgsConstructor
-@Tag(name = "Authentication")
-public class AuthController {
+public class AuthController implements AuthApi {
 
     private final AuthService authService;
 

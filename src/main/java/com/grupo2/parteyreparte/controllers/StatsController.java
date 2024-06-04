@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.controllers;
 
+import com.grupo2.parteyreparte.api.StatsApi;
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.models.Interaction;
@@ -20,8 +21,7 @@ import java.util.List;
 @RequestMapping("/api/v1")
 @RestController
 @SecurityRequirement(name = "BearerAuth")
-@Tag(name = "Stats")
-public class StatsController {
+public class StatsController implements StatsApi {
     private final StatsService statsService;
 
     @Autowired

@@ -17,6 +17,10 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 @Server(
                         description = "Local server",
                         url = "http://localhost:8080"
+                ),
+                @Server(
+                        description = "Prod server",
+                        url = "http://ec2-52-207-241-104.compute-1.amazonaws.com:8080"
                 )
         }
 )

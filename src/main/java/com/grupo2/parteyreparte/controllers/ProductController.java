@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.controllers;
 
+import com.grupo2.parteyreparte.api.ProductApi;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
@@ -19,8 +20,7 @@ import java.util.List;
 @CrossOrigin(value = "*")
 @RequestMapping("/api/v1/products")
 @SecurityRequirement(name = "BearerAuth")
-@Tag(name = "Products")
-public class ProductController {
+public class ProductController implements ProductApi {
 
     private final ProductService productService;
     private final StatsService statsService;

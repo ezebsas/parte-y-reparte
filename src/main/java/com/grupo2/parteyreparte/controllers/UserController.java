@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.controllers;
 
+import com.grupo2.parteyreparte.api.UserApi;
 import com.grupo2.parteyreparte.dtos.NotificationDTO;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
@@ -20,8 +21,7 @@ import java.util.List;
 @RequestMapping("/api/v1")
 @RestController
 @SecurityRequirement(name = "BearerAuth")
-@Tag(name = "User")
-public class UserController {
+public class UserController implements UserApi {
     private final UserService userService;
     private final UserMapper userMapper;
     private final ProductService productService;
