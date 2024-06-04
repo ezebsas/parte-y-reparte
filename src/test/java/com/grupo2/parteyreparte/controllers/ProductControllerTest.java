@@ -3,6 +3,7 @@ package com.grupo2.parteyreparte.controllers;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
 import com.grupo2.parteyreparte.mappers.UserMapper;
+import com.grupo2.parteyreparte.models.Interaction;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.ProductUnit;
 import com.grupo2.parteyreparte.security.config.JwtAuthenticationFilter;
@@ -49,7 +50,7 @@ class ProductControllerTest {
         ProductDTO productDTO = productMapper.mapToProductDTO(product);
 
         Mockito.when(productService.createProduct(Mockito.any())).thenReturn(productDTO);
-        Mockito.doNothing().when(statsService).addInteraction();
+        Mockito.doNothing().when(statsService).addInteraction(Interaction.InteractionType.PRODUCT_CREATION);
     }
 
     @Test
