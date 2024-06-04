@@ -2,6 +2,7 @@ package com.grupo2.parteyreparte.controllers;
 
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
+import com.grupo2.parteyreparte.models.Interaction;
 import com.grupo2.parteyreparte.services.AuthService;
 import com.grupo2.parteyreparte.services.StatsService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -45,4 +46,5 @@ public class StatsController {
         response.setValue(statsService.getUniqueUsersCount());
         return ResponseEntity.ok(response);
     }
+
 }

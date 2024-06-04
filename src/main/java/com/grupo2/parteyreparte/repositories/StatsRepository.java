@@ -1,19 +1,14 @@
 package com.grupo2.parteyreparte.repositories;
 
+import com.grupo2.parteyreparte.models.Interaction;
+import lombok.Getter;
+import org.springframework.data.mongodb.repository.Aggregation;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
-
 @Repository
-public class StatsRepository {
+public interface StatsRepository extends MongoRepository<Interaction, String> {
 
-    private Set<String> uniqueUsersId = new HashSet<>();
-
-    public void addInteraction(String id){
-        uniqueUsersId.add(id);
-    }
-
-    public int uniqueUsers(){
-        return uniqueUsersId.size();
-    }
+    @Aggregation(pipeline = { "{$group: {_id: '$userId'}}", "{$count: 'count'}" })
+    long countUniqueUsers();
 }

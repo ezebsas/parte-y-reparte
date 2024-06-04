@@ -37,6 +37,15 @@ public class ExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<ApiResponse<String>> handleProductClosedException(ProductClosedException e){
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setMessage("Error");
+        response.setValue(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ApiResponse<String>> handleUnauthorizedOperationException(UnauthorizedOperationException e){
         ApiResponse<String> response = new ApiResponse<>();
         response.setMessage("Error");

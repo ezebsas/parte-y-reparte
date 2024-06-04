@@ -3,12 +3,14 @@ package com.grupo2.parteyreparte.services;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
+import com.grupo2.parteyreparte.exceptions.ProductClosedException;
 import com.grupo2.parteyreparte.exceptions.ProductFullException;
 import com.grupo2.parteyreparte.exceptions.UnauthorizedOperationException;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
 import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
+import com.grupo2.parteyreparte.models.ProductState;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.NotificationRepository;
 import com.grupo2.parteyreparte.repositories.ProductRepositoryDepre;
@@ -35,6 +37,8 @@ public class ProductService {
     private static final String ALREADY_EXISTS = " already exists";
     private static final String DOES_NOT_EXIST = " does not exist";
 
+    private static final String PRODUCT_CLOSED = "Product is already closed";
+
 
     private final ProductRepository productRepository;
     private final UserService userService;
@@ -56,6 +60,10 @@ public class ProductService {
 
         return this.productRepository.findAll().stream().map(this.productMapper::mapToProductDTO).collect(Collectors.toList());
 
+    }
+
+    public Integer countProducts() {
+        return Math.toIntExact(productRepository.count());
     }
 
     public ProductDTO createProduct(ProductDTO productDTO) {
@@ -122,11 +130,17 @@ public class ProductService {
     }
 
     public void unsubscribeLoggedUser(String productId){
-        this.userService.deleteUserProductById(productId);
         Product product = this.getProductById(productId);
-        User user = userService.getLoggedUser();
-        product.unsubscribe(user.getId());
-        this.productRepository.save(product);
+        ProductState state = product.getState();
+
+        if (state == ProductState.OPEN) {
+            this.userService.deleteUserProductById(productId);
+            User user = userService.getLoggedUser();
+            product.unsubscribe(user.getId());
+            this.productRepository.save(product);
+        } else {
+            throw new ProductClosedException(PRODUCT_CLOSED);
+        }
     }
 
     public List<UserDTO> getParticipants(String id) {

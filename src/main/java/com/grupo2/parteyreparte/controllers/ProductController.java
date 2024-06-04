@@ -3,6 +3,7 @@ package com.grupo2.parteyreparte.controllers;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
+import com.grupo2.parteyreparte.models.Interaction;
 import com.grupo2.parteyreparte.services.ProductService;
 import com.grupo2.parteyreparte.services.StatsService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -45,7 +46,7 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductDTO>> createProduct(@RequestBody ProductDTO productDTO) {
 
             ProductDTO createdProduct = productService.createProduct(productDTO);
-            statsService.addInteraction();
+            statsService.addInteraction(Interaction.InteractionType.PRODUCT_CREATION);
             ApiResponse<ProductDTO> response = new ApiResponse<>();
             response.setMessage("New product successfully created ");
             response.setValue(createdProduct);
@@ -86,7 +87,7 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductDTO>> subscribeUser(@PathVariable String id) {
 
             ProductDTO product = productService.subscribeLoggedUser(id);
-            statsService.addInteraction();
+            statsService.addInteraction(Interaction.InteractionType.PRODUCT_SUBSCRIPTION);
             ApiResponse<ProductDTO> response = new ApiResponse<>();
             response.setMessage("Subscribed to product: " + id);
             response.setValue(product);
