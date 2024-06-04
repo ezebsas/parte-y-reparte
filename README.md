@@ -17,12 +17,31 @@ _Descargar repositorio mediante git_
 
 ## Despliegue 📦
 
-* Es necesario copiar los archivos .env y .env.local que mandamos por privado
+* Es necesario copiar los archivos .env y .env.local que mandamos por privado.
 El archivo .env hay que copiarlo en la raiz del proyecto
-Y en la carpeta /src/main/ui hay que copiar el archivo .env.local 
+Y en la carpeta /src/main/ui hay que copiar el archivo .env.local. O pueden configurarlo ustedes mismos.
 * En la carpeta raiz del proyecto ejecutar el comando de docker ("docker compose up -d --build")
 * Ubicarse en la carpeta /src/main/ui y correr npm run dev
 
+#### Configuración de .env (Ruta: "/src/main/resources")
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `SECURITY_KEY` | `string` | **Requerido**. Clave en base64 de 32 Bytes |
+| `DB_MONGO_HOST` | `string` | **Requerido**. Ruta de la base de datos |
+| `DB_MONGO_USERNAME` | `string` | **Requerido**. Usuario en la base de datos |
+| `DB_MONGO_PASSWORD` | `string` | **Requerido**. Contraseña de la base de datos |
+
+Puedes generar tu base64 key de 32 Bytes [Acá](https://generate.plus/en/base64)
+
+#### Configuración de .env.local (Ruta: "src/main/ui")
+
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `NEXTAUTH_SECRET` | `string` | **Requerido**. Clave para que utilice Next |
+| `NEXTAUTH_URL` | `string` | **Requerido**. Ruta del dominio donde se encuentra el servidor frontend |
+| `NEXT_PUBLIC_BACKEND_INTERNAL_URL` | `string` | **Requerido**. Ruta de la base de datos 
 
 
 
@@ -36,6 +55,15 @@ Y en la carpeta /src/main/ui hay que copiar el archivo .env.local
 ## Documentado con Swagger
 
 * Se puede consultar los endpoints al momento de levantar la aplicación en la ruta "/swagger-ui.html"
+
+
+## Tecnologías utilizadas
+
+**Contenedores** : Docker
+
+**Cliente:** React, NextJs, TailwindCSS
+
+**Server:** Java, Spring(Spring boot, Spring security, Spring core, Spring data)
 
 
 ## Autores ✒️
