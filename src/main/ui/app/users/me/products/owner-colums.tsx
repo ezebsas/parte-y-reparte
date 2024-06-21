@@ -24,7 +24,7 @@ export const ownercolumns: ColumnDef<IProduct>[] = [
       };
 
       return (
-        <Button variant="ghost" className="h-8 w-8 p-0" onClick={handleRedirect}>
+        <Button variant="ghost" className="w-full	h-full whitespace-normal" onClick={handleRedirect}>
           {product.name}
         </Button>
       );

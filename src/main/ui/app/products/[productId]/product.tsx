@@ -20,13 +20,13 @@ import { parteYRepartePaths } from "@/utils/paths";
 import { IProduct } from "@/interfaces/parte-y-reparte-interfaces";
 
 function ProductDetails({ product }: { product: IProduct }) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const sessionToken = session?.user.value!.token;
   const { toast } = useToast();
   const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
-    if (!product) {
+    if (!product || status == 'loading') {
       return;
     }
 
@@ -39,7 +39,7 @@ function ProductDetails({ product }: { product: IProduct }) {
     };
 
     suscribeManage();
-  }, [sessionToken, product]);
+  }, [sessionToken, product, status]);
 
   const handleSubscribe = async () => {
     try {
@@ -62,7 +62,6 @@ function ProductDetails({ product }: { product: IProduct }) {
           title: "Uh oh! Something went wrong.",
           description: "Error subscribing. Please reload the page",
         })
-        console.log("cheems")
         throw new Error("Error subscribing:" + res.statusText);
       }
     } catch (error) {
@@ -121,7 +120,10 @@ function ProductDetails({ product }: { product: IProduct }) {
       className="product-info-container"
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <div className="my-5">
+      {
+         status === "loading"? (<div>Loading</div>): 
+         (<>
+               <div className="my-5">
         {product.image ? (
           <Image
             className="rounded-lg object-cover min-h-80 max-h-80"
@@ -274,6 +276,8 @@ function ProductDetails({ product }: { product: IProduct }) {
         </Card>
         <Toaster />
       </div>
+      </>)
+      }
     </div>
   );
 }

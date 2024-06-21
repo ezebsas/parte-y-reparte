@@ -117,6 +117,6 @@ const errorCodes = (code : number) => {
 
   if (code == 403) {
     // TODO
-    throw new Error(`Error 403: Forbidden. PD: Este error nunca debería mostrarse`)
+    throw new Error(`Error 403: Forbidden. Auth failed`)
   }
 }
