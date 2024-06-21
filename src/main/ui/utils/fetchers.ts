@@ -36,7 +36,7 @@ export const postDataFetch = async(RESOURCE: string, data: Object) => {
     body: JSON.stringify(data),
   });
 
-  errorCodes(res.status)
+  //errorCodes(res.status)
 
   return res;
 }
@@ -57,7 +57,7 @@ export const deleteDataFetch = async (RESOURCE: string) => {
     }
   );
 
-  errorCodes(res.status)
+  //errorCodes(res.status)
 
   return res;
 }
@@ -78,7 +78,7 @@ export const putDataFetch = async (RESOURCE: string) => {
         }
       );
   
-  errorCodes(res.status)
+  //errorCodes(res.status)
 
   return res;
 }
