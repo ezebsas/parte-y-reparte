@@ -1,4 +1,4 @@
-package com.grupo2.parteyreparte.repositories;
+package com.grupo2.parteyreparte.repositories.mongo;
 
 import com.grupo2.parteyreparte.exceptions.EntityNotFoundException;
 import com.grupo2.parteyreparte.models.Product;

@@ -1,4 +1,4 @@
-package com.grupo2.parteyreparte.repositories;
+package com.grupo2.parteyreparte.repositories.mongo;
 
 import com.grupo2.parteyreparte.models.Notification;
 import org.springframework.data.mongodb.repository.MongoRepository;

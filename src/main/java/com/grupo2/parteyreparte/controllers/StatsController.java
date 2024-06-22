@@ -47,4 +47,21 @@ public class StatsController implements StatsApi {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/stats/interactions-amount")
+    public ResponseEntity<ApiResponse<Integer>> interactionsAmount(){
+
+        ApiResponse<Integer> response = new ApiResponse<>();
+        response.setMessage("Amount of interactions");
+        response.setValue(statsService.getAmountInteractions());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/stats/interactions")
+    public ResponseEntity<ApiResponse<List<Interaction>>> interactions(){
+
+        ApiResponse<List<Interaction>> response = new ApiResponse<>();
+        response.setMessage("All interactions");
+        response.setValue(statsService.getAll());
+        return ResponseEntity.ok(response);
+    }
 }

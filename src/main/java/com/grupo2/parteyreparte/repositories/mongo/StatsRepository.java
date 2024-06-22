@@ -1,4 +1,4 @@
-package com.grupo2.parteyreparte.repositories;
+package com.grupo2.parteyreparte.repositories.mongo;
 
 import com.grupo2.parteyreparte.models.Interaction;
 import lombok.Getter;
@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface StatsRepository extends MongoRepository<Interaction, String> {
 
     @Aggregation(pipeline = { "{$group: {_id: '$userId'}}", "{$count: 'count'}" })
-    long countUniqueUsers();
+    Long countUniqueUsers();
+
 }
