@@ -111,12 +111,8 @@ public class User implements UserDetails {
             this.setName(userUpdate.getName());
         }
 
-        if ((Integer)userUpdate.getAge() != null) {
+        if ((Integer)userUpdate.getAge() > 0) {
             this.setAge(userUpdate.getAge());
-        }
-
-        if (userUpdate.getEmail() != null) {
-            this.setEmail(userUpdate.getEmail());
         }
 
     }

@@ -57,14 +57,31 @@ export default function Home() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await patchDataFetch(parteYRepartePaths.me.base,{name: userData.name});
+    try{
+      const res = await patchDataFetch(parteYRepartePaths.me.base,{name: userData.name});
 
-    if (res.ok) {
-      toast({
-        title: "Name changed!",
-        description: `You change your name successfully to ${userData.name}` ,
-      })
+      if (res.ok) {
+        toast({
+          title: "Name changed!",
+          description: `You change your name successfully to ${userData.name}` ,
+        })
+      } else {
+        toast({
+          title: "Something Happen!",
+          description: `You couldn't change your name please try again later` ,
+        })
+      }
+    } catch (error) {
+      let message = "Unknown Error";
+
+      if (error instanceof Error) {
+        message = error.message;
+      }
+
+      console.error("Error changing name:", message);
+      // Handle errors here
     }
+
   };
 
 

@@ -22,6 +22,10 @@ export default NextAuth({
           email: credentials?.email,
           password: credentials?.password,
         });
+
+        if (!res.ok) {
+          return;
+        }
         
         const user = await res.json();
 
