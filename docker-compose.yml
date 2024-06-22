@@ -29,6 +29,15 @@ services:
       ME_CONFIG_BASICAUTH: "false"
     depends_on:
       - mongo
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    env_file:
+      - ./src/main/resources/.env
+    command: [ "redis-server", "--requirepass", "${REDIS_PASSWORD}" ]
+    depends_on:
+      - mongo-express
   frontend:
     container_name: frontend
     image: frontend-img
