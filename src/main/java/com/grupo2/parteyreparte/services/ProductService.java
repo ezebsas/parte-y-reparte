@@ -12,8 +12,12 @@ import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.ProductState;
 import com.grupo2.parteyreparte.models.User;
-import com.grupo2.parteyreparte.repositories.NotificationRepository;
-import com.grupo2.parteyreparte.repositories.ProductRepository;
+import com.grupo2.parteyreparte.repositories.mongo.NotificationRepository;
+import com.grupo2.parteyreparte.repositories.mongo.ProductRepository;
+import dev.failsafe.Failsafe;
+import dev.failsafe.RetryPolicy;
+import dev.failsafe.function.CheckedRunnable;
+import dev.failsafe.function.CheckedSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
@@ -45,15 +49,17 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final UserMapper  userMapper;
     private final NotificationRepository notificationRepository;
+    private final RetryPolicy<Object> optimisticLockRetry;
 
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper, UserMapper userMapper, UserService userService, NotificationRepository notificationRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, UserMapper userMapper, UserService userService, NotificationRepository notificationRepository, RetryPolicy<Object> optimisticLockRetry) {
         this.productMapper = productMapper;
         this.userMapper = userMapper;
         this.userService = userService;
         this.productRepository = productRepository;
         this.notificationRepository = notificationRepository;
+        this.optimisticLockRetry = optimisticLockRetry;
     }
 
     public List<ProductDTO> getAll() {
@@ -93,21 +99,11 @@ public class ProductService {
 
     public ProductDTO updateProduct(String id, ProductDTO productDTO) {
 
-            for(int i = 0; i< MaxRetries; i++){
-                try{
-                    Product product = this.getProductById(id);
-                    product.patchProduct(productMapper.mapToProduct(productDTO));
-                    return this.productMapper.mapToProductDTO(this.productRepository.save(product));
-
-                }catch (OptimisticLockingFailureException e) {
-                    try {
-                        Thread.sleep(RetryDelayInMs);
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-            }
-            throw new RuntimeException("Failed to update product after " + MaxRetries + " attempts due to concurrent updates");
+        return Failsafe.with(optimisticLockRetry).get((CheckedSupplier<ProductDTO>) () -> {
+            Product product = this.getProductById(id);
+            product.patchProduct(productMapper.mapToProduct(productDTO));
+            return this.productMapper.mapToProductDTO(this.productRepository.save(product));
+        });
 
     }
 /* PARA mi con el update ya estaria xq hacen lo mismo
@@ -123,69 +119,40 @@ public class ProductService {
     }*/
 
     public ProductDTO subscribeLoggedUser(String productId) {
-        for(int i = 0; i< MaxRetries; i++){
-            try{
-                Product product = this.getProductById(productId);
 
-                if (product.isFull()) {
-                    throw new ProductFullException(PRODUCT_IS_FULL);
-                }
+        Product product = this.getProductById(productId);
 
-                User user = userService.getLoggedUser();
-
-                if (product.getSuscribers().stream().map(User::getId)
-                        .anyMatch(id -> id.equals((String) user.getId() )) ) {
-                    throw new ProductFullException(USER_ALREADY_SUBSCRIBED);
-                }
-
-                product.subscribeUser(user);
-                this.productRepository.save(product);
-                userService.subscribeToProduct(product);
-
-                return this.productMapper.mapToProductDTO(product);
-            }catch (OptimisticLockingFailureException e) {
-                try {
-                    Thread.sleep(RetryDelayInMs);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
-            }
+        User user = userService.getLoggedUser();
+        if (product.isFull()) {
+            throw new ProductFullException(PRODUCT_IS_FULL);
         }
-        throw new RuntimeException("Failed to subscribe user after " + MaxRetries + " attempts due to concurrent updates");
+
+        if (product.getSuscribers().stream().map(User::getId)
+                .anyMatch(id -> id.equals((String) user.getId() )) ) {
+            throw new ProductFullException(USER_ALREADY_SUBSCRIBED);
+        }
+        product.subscribeUser(user);
+        Failsafe.with(optimisticLockRetry).run((CheckedRunnable) () -> {
+            this.productRepository.save(product);
+        });
+        userService.subscribeToProduct(product);
+        return this.productMapper.mapToProductDTO(product);
     }
 
     public void unsubscribeLoggedUser(String productId){
-        boolean productUpdated = false;
-        for(int i = 0; i< MaxRetries; i++){
-            try{
 
-                Product product = this.getProductById(productId);
-                ProductState state = product.getState();
-
-                if (state == ProductState.OPEN) {
-                    User user = userService.getLoggedUser();
-                    product.unsubscribe(user.getId());
-                    this.productRepository.save(product);
-                    productUpdated = true;
-                    break;
-
-                } else {
-                    throw new ProductClosedException(PRODUCT_CLOSED);
-                }
-
-            }catch (OptimisticLockingFailureException e) {
-                try {
-                    Thread.sleep(RetryDelayInMs);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
+        Product product = this.getProductById(productId);
+        ProductState state = product.getState();
+        if (state == ProductState.OPEN) {
+            User user = userService.getLoggedUser();
+            product.unsubscribe(user.getId());
+            Failsafe.with(optimisticLockRetry).run((CheckedRunnable) () -> {
+                this.productRepository.save(product);
+                });
+            } else {
+                throw new ProductClosedException(PRODUCT_CLOSED);
             }
-        }
-        if(productUpdated) {
-            this.userService.deleteUserProductById(productId);
-        }else{
-            throw new RuntimeException("Failed to unsubscribe user after " + MaxRetries + " attempts due to concurrent updates");
-        }
+        this.userService.deleteUserProductById(productId);
     }
 
     public List<UserDTO> getParticipants(String id) {
@@ -194,27 +161,18 @@ public class ProductService {
     }
 
     public ProductDTO closeProduct(String id) {
-        for(int i = 0; i< MaxRetries; i++){
-            try{
-                Product product = this.getProductById(id);
-                User loggedUser = this.userService.getLoggedUser();
+        Product product = this.getProductById(id);
+        User loggedUser = this.userService.getLoggedUser();
 
-                if(!product.isOwner(loggedUser)){
-                    throw new UnauthorizedOperationException(USER_DOES_NOT_HAVE_PERMISSION);
-                }
-                product.close();
-                this.productRepository.save(product);
-                this.notifyUsers(product);
-                return this.productMapper.mapToProductDTO(product);
-            }catch (OptimisticLockingFailureException e) {
-                try {
-                    Thread.sleep(RetryDelayInMs);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
-            }
+        if(!product.isOwner(loggedUser)){
+            throw new UnauthorizedOperationException(USER_DOES_NOT_HAVE_PERMISSION);
         }
-        throw new RuntimeException("Failed to close product after " + MaxRetries + " attempts due to concurrent updates");
+        product.close();
+        Failsafe.with(optimisticLockRetry).run((CheckedRunnable) () -> {
+            this.productRepository.save(product);
+        });
+        this.notifyUsers(product);
+        return this.productMapper.mapToProductDTO(product);
     }
     public void notifyUsers(Product product) {
         Notification notification = new Notification("Product closed", LocalDateTime.now(), product);

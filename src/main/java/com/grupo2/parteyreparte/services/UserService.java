@@ -10,7 +10,7 @@ import com.grupo2.parteyreparte.mappers.UserMapper;
 import com.grupo2.parteyreparte.models.Notification;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.User;
-import com.grupo2.parteyreparte.repositories.UserRepository;
+import com.grupo2.parteyreparte.repositories.mongo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

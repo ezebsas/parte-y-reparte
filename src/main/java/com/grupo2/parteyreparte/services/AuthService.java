@@ -5,7 +5,7 @@ import com.grupo2.parteyreparte.dtos.AuthResponseDTO;
 import com.grupo2.parteyreparte.dtos.RegisterRequestDTO;
 import com.grupo2.parteyreparte.exceptions.AuthException;
 import com.grupo2.parteyreparte.models.User;
-import com.grupo2.parteyreparte.repositories.UserRepository;
+import com.grupo2.parteyreparte.repositories.mongo.UserRepository;
 import com.grupo2.parteyreparte.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

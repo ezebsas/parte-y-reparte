@@ -1,6 +1,6 @@
 package com.grupo2.parteyreparte.security.config;
 
-import com.grupo2.parteyreparte.repositories.UserRepository;
+import com.grupo2.parteyreparte.repositories.mongo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
