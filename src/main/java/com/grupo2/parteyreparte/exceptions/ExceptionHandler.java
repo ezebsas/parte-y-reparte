@@ -21,6 +21,13 @@ public class ExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<ApiResponse<String>> handleMaxRetriesException(MaxRetriesExceededException e){
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setMessage("Error");
+        response.setValue(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+    @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<ApiResponse<ErrorResponseDTO>> handleAuthException(AuthException e) {
         ApiResponse<ErrorResponseDTO> response = new ApiResponse<>();
         response.setMessage("Error");

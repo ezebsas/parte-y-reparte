@@ -1,5 +1,6 @@
 package com.grupo2.parteyreparte.config.policies;
 
+import com.grupo2.parteyreparte.exceptions.MaxRetriesExceededException;
 import dev.failsafe.RetryPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,8 @@ public class RetryConfig {
                 .handle(OptimisticLockingFailureException.class)
                 .withBackoff(RetryDelayInMs, MaximumRetryDelayInMs, ChronoUnit.MILLIS)
                 .withMaxAttempts(MaxRetries)
+                .onFailedAttempt(event -> {throw new MaxRetriesExceededException("Failed to save product after " + MaxRetries + " attempts due to concurrent updates");
+                })
                 .build();
     }
 }
