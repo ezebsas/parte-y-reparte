@@ -89,6 +89,9 @@ public class Product {
         return this.unit != ProductUnit.UNIT || this.quantity % this.suscribers.size() == 0;
     }
 
+    public void initiateSubscribers(){
+        this.setSuscribers(new ArrayList<User>());
+    }
     public void unsubscribe(String userId) {
         List<User> subscribers = this.getSuscribers();
         this.setSuscribers(subscribers.stream().filter(u -> !u.getId().equals(userId)).toList() );
@@ -117,13 +120,7 @@ public class Product {
             this.setDeadline(productUpdate.getDeadline());
         }
 
-        if (productUpdate.getMaxPeople() != 0) {
-            this.setMaxPeople(productUpdate.getMaxPeople());
-        }
 
-        if (productUpdate.getMinPeople() != 0) {
-            this.setMinPeople(productUpdate.getMinPeople());
-        }
 
         Double totalCost = productUpdate.getTotalCost();
         if (totalCost != null) {
@@ -131,13 +128,6 @@ public class Product {
         }
 
 
-        if (productUpdate.getSuscribers() != null) {
-            this.setSuscribers(productUpdate.getSuscribers());
-        }
-
-        if (productUpdate.getState() != null) {
-            this.setState(productUpdate.getState());
-        }
 
         if (productUpdate.getUnit() != null) {
             this.setUnit(productUpdate.getUnit());

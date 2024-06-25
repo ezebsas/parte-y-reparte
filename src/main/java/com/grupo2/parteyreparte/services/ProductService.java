@@ -76,6 +76,7 @@ public class ProductService {
         User loggedUser = this.userService.getLoggedUser();
         Product product = this.productMapper.mapToProduct(productDTO);
         product.setOwner(loggedUser);
+        product.initiateSubscribers();
 
         if (product.getDeadline().isBefore(LocalDateTime.now())) {
             throw new ProductFullException("PRODUCT_BAD_DATE");
