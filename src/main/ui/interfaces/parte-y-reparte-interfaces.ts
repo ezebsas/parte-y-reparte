@@ -1,16 +1,22 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-06-04 01:41:49.
+// Generated using typescript-generator version 3.2.1263 on 2024-06-25 03:52:39.
 
 export interface IApiResponse<T> {
     message: string;
     value: T;
 }
 
+/**
+ * DTO for login response
+ */
 export interface IAuthResponse {
     token: string;
 }
 
+/**
+ * DTO of a product
+ */
 export interface IProduct {
     id: string;
     name: string;
@@ -27,6 +33,9 @@ export interface IProduct {
     owner: IUser;
 }
 
+/**
+ * DTO of the user
+ */
 export interface IUser {
     name: string;
     age: number;

@@ -7,6 +7,7 @@ import com.grupo2.parteyreparte.models.Interaction;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.ProductUnit;
 import com.grupo2.parteyreparte.security.config.JwtAuthenticationFilter;
+import com.grupo2.parteyreparte.services.InteractionService;
 import com.grupo2.parteyreparte.services.ProductService;
 import com.grupo2.parteyreparte.services.StatsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,7 @@ class ProductControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private StatsService statsService;
+    private InteractionService interactionService;
 
     @MockBean
     private ProductService productService;
@@ -50,7 +51,6 @@ class ProductControllerTest {
         ProductDTO productDTO = productMapper.mapToProductDTO(product);
 
         Mockito.when(productService.createProduct(Mockito.any())).thenReturn(productDTO);
-        Mockito.doNothing().when(statsService).addInteraction(Interaction.InteractionType.PRODUCT_CREATION);
     }
 
     @Test

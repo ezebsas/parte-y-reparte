@@ -1,8 +1,8 @@
 package com.grupo2.parteyreparte.services;
 
 import com.grupo2.parteyreparte.models.Product;
-import com.grupo2.parteyreparte.repositories.ProductRepositoryDepre;
-import com.grupo2.parteyreparte.repositories.StatsRepository;
+import com.grupo2.parteyreparte.repositories.mongo.ProductRepository;
+import com.grupo2.parteyreparte.repositories.mongo.StatsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,10 +22,7 @@ class StatsServiceTest {
     StatsRepository statsRepository;
 
     @MockBean
-    UserService userService;
-
-    @MockBean
-    ProductRepositoryDepre productRepository;
+    ProductService productServiceMock;
 
     @BeforeEach
     public void init() {
@@ -33,14 +30,13 @@ class StatsServiceTest {
     }
 
 
-    @Test // Solo para la parte de contador de publicaciones de la historia 5
-    public void testAmountOfPublicationsIs3() {
+    @Test // History 5
+    public void amountOfPublicationsIs3() {
 
-        Mockito.when(productRepository.getAll()).thenReturn(
-                java.util.List.of(Mockito.mock(Product.class),Mockito.mock(Product.class),Mockito.mock(Product.class))
-        );
+        Mockito.when(productServiceMock.countProducts()).thenReturn(3);
 
         assertEquals(3,statsService.getPublicationsCount());
+        Mockito.verify(productServiceMock,Mockito.times(1)).countProducts();
     }
 
 

@@ -1,13 +1,12 @@
 package com.grupo2.parteyreparte.services;
 
 import com.grupo2.parteyreparte.dtos.ProductDTO;
+import com.grupo2.parteyreparte.exceptions.ProductClosedException;
 import com.grupo2.parteyreparte.exceptions.ProductFullException;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
-import com.grupo2.parteyreparte.models.Product;
-import com.grupo2.parteyreparte.models.ProductState;
-import com.grupo2.parteyreparte.models.ProductUnit;
-import com.grupo2.parteyreparte.models.User;
-import com.grupo2.parteyreparte.repositories.ProductRepositoryDepre;
+import com.grupo2.parteyreparte.models.*;
+import com.grupo2.parteyreparte.repositories.mongo.NotificationRepository;
+import com.grupo2.parteyreparte.repositories.mongo.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,13 +29,16 @@ class ProductServiceTest {
     ProductService productService;
 
     @MockBean
-    ProductRepositoryDepre productRepositoryMock;
+    ProductRepository productRepositoryMock;
 
     @MockBean
     UserService userServiceMock;
 
     @MockBean
     ProductMapper productMapperMock;
+
+    @MockBean
+    NotificationRepository notificationRepositoryMock;
 
     User userTest;
 
@@ -48,24 +51,23 @@ class ProductServiceTest {
     }
 
     @Test // Test de servicio para historia 1
-    void testCreateAProductSuccessfully() {
+    void productCreatedSuccessfully() {
 
         String test_id = "1";
         Product cocaProduct = new Product("Coca","www.dns.a/a.img",3,2,33.2, 10.0, ProductUnit.UNIT);
         cocaProduct.setDeadline(LocalDateTime.now().plusDays(2));
         ProductDTO cocaProductDTO = new ProductDTO("Coca","www.dns.a/a.img",3,2,33.2, 10, ProductUnit.UNIT);
 
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(cocaProduct);
-        Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(cocaProduct);
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(cocaProduct));
+        Mockito.when(productRepositoryMock.insert(Mockito.any(Product.class))).thenReturn(cocaProduct);
 
         Mockito.when(productMapperMock.mapToProduct(cocaProductDTO)).thenReturn(cocaProduct);
 
-        Mockito.when(productRepositoryMock.existsById(Mockito.anyString())).thenReturn(false);
         Mockito.doAnswer(invocationOnMock -> {
             Product product = (Product) invocationOnMock.getArguments()[0];
             product.setId(test_id);
             return product;
-        }).when(productRepositoryMock).createProduct(cocaProduct);
+        }).when(productRepositoryMock).insert(cocaProduct);
 
         Mockito.doAnswer(invocationOnMock -> {
             Product product = (Product) invocationOnMock.getArguments()[0];
@@ -76,33 +78,86 @@ class ProductServiceTest {
 
         ProductDTO productCreated = productService.createProduct(cocaProductDTO);
 
+        Mockito.verify(productRepositoryMock).insert(cocaProduct);
         assertTrue(productCreated.getId().contains(test_id));
-        assertEquals(1,userTest.getProductsPublished().size());
+        Mockito.verify(userServiceMock).publishProduct(cocaProduct);
     }
 
     @Test // Test de servicio para historia 2
-    void testSuccessfulSubscriptionToAProduct() {
+    void theSubscriptionToAProductWasSuccessfull() {
         String test_id = "1";
         String pastFrola = "Pasta frola";
 
         Product pastaFrolaProduct = new Product(pastFrola,"www.dns.a/a.img",5,2,33.2, 10.0, ProductUnit.KILOGRAM);
 
-        Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(pastaFrolaProduct);
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(pastaFrolaProduct);
-
-
-        Mockito.when(userServiceMock.getLoggedUser()).thenReturn(userTest);
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(pastaFrolaProduct));
 
         productService.subscribeLoggedUser(test_id);
 
         assertEquals(pastaFrolaProduct.getSuscribers().size(),1);
         assertEquals(pastaFrolaProduct.getSuscribers().get(0).getName(),"Migue");
-        assertEquals(userTest.getProductsSubscribed().get(0).getName(), pastFrola);
+        Mockito.verify(userServiceMock,Mockito.times(1)).subscribeToProduct(pastaFrolaProduct);
+    }
+
+    @Test
+    void userCantUnsubscribeBecauseTheProductIsClosed() {
+
+        User ernesto = new User("Ernesto",13,"ee@asd.com");
+        String manaos = "Manaos";
+        Product manaosProduct = new Product(manaos,"www.dns.a/a.img",5,2,33.2, 10.0, ProductUnit.KILOGRAM);
+        userTest.setId("1");
+        manaosProduct.setId("1");
+        manaosProduct.setOwner(ernesto);
+
+        List<User> subscribers = new ArrayList<>();
+        subscribers.add(userTest);
+        manaosProduct.setSuscribers(subscribers);
+        manaosProduct.close();
+
+
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(manaosProduct));
+
+        assertThrows(ProductClosedException.class, () -> productService.unsubscribeLoggedUser("1"));
+    }
+
+    @Test
+    void userCanUnsubscribeFromAProduct() {
+
+        User ernesto = new User("Ernesto",13,"ee@asd.com");
+        String manaos = "Manaos";
+        Product manaosProduct = new Product(manaos,"www.dns.a/a.img",5,2,33.2, 10.0, ProductUnit.KILOGRAM);
+        userTest.setId("1");
+        manaosProduct.setId("1");
+        manaosProduct.setOwner(ernesto);
+
+        List<User> subscribers = new ArrayList<>();
+        subscribers.add(userTest);
+        manaosProduct.setSuscribers(subscribers);
+
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(manaosProduct));
+
+
+        productService.unsubscribeLoggedUser("1");
+        Mockito.verify(userServiceMock,Mockito.times(1)).deleteUserProductById("1");
+    }
+
+    @Test
+    void productCanBeUpdated() {
+        ProductDTO cbseDTO = Mockito.mock(ProductDTO.class);
+        Product cbseProduct = Mockito.mock(Product.class);
+
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(cbseProduct));
+        Mockito.when(productRepositoryMock.save(Mockito.any(Product.class))).thenReturn(cbseProduct);
+        Mockito.when(productMapperMock.mapToProduct(cbseDTO)).thenReturn(cbseProduct);
+
+        productService.updateProduct("1",cbseDTO);
+
+        Mockito.verify(productRepositoryMock).save(Mockito.any(Product.class));
     }
 
     // Tests de servicio para historia 4
     @Test
-    void testNotifyUsersWhenClosingAPublication() {
+    void notifyUsersOfTheClosureOfAPostThatSuccessfullyReachedTheMinimum() {
 
         Product beefProduct = new Product("Beef","www.dns.a/a.img",5,2,33.2, 10.0, ProductUnit.KILOGRAM);
 
@@ -110,43 +165,47 @@ class ProductServiceTest {
         subscribers.add(new User("Ernesto",13,"ee@asd.com"));
         subscribers.add(new User("Guille",23,"gg@asd.com"));
         beefProduct.setSuscribers(subscribers);
+        userTest.setId("1");
+        beefProduct.setId("1");
         beefProduct.setOwner(userTest);
         userTest.setProductsPublished(List.of(beefProduct));
 
-        Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(beefProduct);
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(beefProduct);
-
+        Mockito.when(productRepositoryMock.save(Mockito.any(Product.class))).thenReturn(beefProduct);
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(beefProduct));
+        Mockito.doNothing().when(userServiceMock).notifyUser(Mockito.any(User.class),Mockito.any(Notification.class));
 
 
         productService.closeProduct("1");
 
-        assertEquals(1,subscribers.get(0).getNotifications().size());
-        assertEquals(1,subscribers.get(1).getNotifications().size());
+        Mockito.verify(userServiceMock,Mockito.times(2)).notifyUser(Mockito.any(User.class),Mockito.any(Notification.class));
         assertEquals(ProductState.CLOSED_COMPLETED, beefProduct.getState());
     }
 
     @Test
-    void testNotifyUsersWhenClosingAnIncompletePublication() {
+    void notifyUsersWhenClosingAnIncompletePublication() {
 
-        Product bikePackProduct = new Product("Bike x100","www.dns.a/a.img",5,2,33.2, 10.0, ProductUnit.KILOGRAM);
+        Product bikePackProduct = new Product("Bike x100","www.dns.a/a.img",5,3,33.2, 10.0, ProductUnit.KILOGRAM);
+        userTest.setId("1");
 
         List<User> subscribers = new ArrayList<>();
         subscribers.add(new User("Ernesto",13,"ee@asd.com"));
+        subscribers.add(new User("Gullermito",18,"g@g.com"));
         bikePackProduct.setSuscribers(subscribers);
         bikePackProduct.setOwner(userTest);
 
         userTest.setProductsPublished(List.of(bikePackProduct));
-        Mockito.when(productRepositoryMock.update(Mockito.any(),Mockito.any(Product.class))).thenReturn(bikePackProduct);
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(bikePackProduct);
+        Mockito.when(productRepositoryMock.save(Mockito.any(Product.class))).thenReturn(bikePackProduct);
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(bikePackProduct));
+        Mockito.when(notificationRepositoryMock.save(Mockito.any(Notification.class))).thenReturn(Mockito.mock(Notification.class));
 
         productService.closeProduct("1");
 
-        assertEquals(1,subscribers.get(0).getNotifications().size());
         assertEquals(ProductState.CLOSED_INCOMPLETE, bikePackProduct.getState());
+        Mockito.verify(userServiceMock,Mockito.times(2)).notifyUser(Mockito.any(User.class),Mockito.any(Notification.class));
     }
 
     @Test // Parte de la historia 6
-    void testThrowExceptionWhenSubscribingOneMoreUserToAProduct() {
+    void throwExceptionWhenSubscribingOneMoreUserToAProduct() {
 
         String test_id = "1";
         String applePie = "Apple Pie";
@@ -158,7 +217,7 @@ class ProductServiceTest {
                 Mockito.mock(User.class)
         ));
 
-        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(applePieProduct);
+        Mockito.when(productRepositoryMock.findById(Mockito.anyString())).thenReturn(Optional.of(applePieProduct));
 
 
         assertThrows(ProductFullException.class, () -> productService.subscribeLoggedUser("1"));
