@@ -5,8 +5,8 @@ import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.dtos.UserDTO;
 import com.grupo2.parteyreparte.mappers.ApiResponse;
 import com.grupo2.parteyreparte.models.Interaction;
-import com.grupo2.parteyreparte.services.InteractionService;
 import com.grupo2.parteyreparte.services.ProductService;
+import com.grupo2.parteyreparte.services.StatsService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +22,12 @@ import java.util.List;
 public class ProductController implements ProductApi {
 
     private final ProductService productService;
-    private  final InteractionService interactionService;
+    private final StatsService statsService;
 
     @Autowired
-    public ProductController(ProductService productService, InteractionService interactionService) {
+    public ProductController(ProductService productService, StatsService statsService) {
         this.productService = productService;
-        this.interactionService = interactionService;
+        this.statsService = statsService;
     }
 
 
@@ -46,7 +46,7 @@ public class ProductController implements ProductApi {
 
             ProductDTO createdProduct = productService.createProduct(productDTO);
 
-            interactionService.addInteraction(Interaction.InteractionType.PRODUCT_CREATION);
+            statsService.addInteraction(Interaction.InteractionType.PRODUCT_CREATION);
             ApiResponse<ProductDTO> response = new ApiResponse<>();
             response.setMessage("New product successfully created ");
             response.setValue(createdProduct);
@@ -87,7 +87,6 @@ public class ProductController implements ProductApi {
     public ResponseEntity<ApiResponse<ProductDTO>> subscribeUser(@PathVariable String id) {
 
             ProductDTO product = productService.subscribeLoggedUser(id);
-            interactionService.addInteraction(Interaction.InteractionType.PRODUCT_SUBSCRIPTION);
             ApiResponse<ProductDTO> response = new ApiResponse<>();
             response.setMessage("Subscribed to product: " + id);
             response.setValue(product);

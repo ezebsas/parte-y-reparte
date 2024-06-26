@@ -1,8 +1,6 @@
 package com.grupo2.parteyreparte.services;
 
-import com.grupo2.parteyreparte.models.Product;
-import com.grupo2.parteyreparte.repositories.mongo.ProductRepository;
-import com.grupo2.parteyreparte.repositories.mongo.StatsRepository;
+import com.grupo2.parteyreparte.repositories.redis.StatsRedisRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,7 +17,7 @@ class StatsServiceTest {
     StatsService statsService;
 
     @MockBean
-    StatsRepository statsRepository;
+    StatsRedisRepository statsRedisRepository;
 
     @MockBean
     ProductService productServiceMock;

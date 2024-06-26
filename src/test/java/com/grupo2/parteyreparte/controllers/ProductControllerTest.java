@@ -3,11 +3,9 @@ package com.grupo2.parteyreparte.controllers;
 import com.grupo2.parteyreparte.dtos.ProductDTO;
 import com.grupo2.parteyreparte.mappers.ProductMapper;
 import com.grupo2.parteyreparte.mappers.UserMapper;
-import com.grupo2.parteyreparte.models.Interaction;
 import com.grupo2.parteyreparte.models.Product;
 import com.grupo2.parteyreparte.models.ProductUnit;
 import com.grupo2.parteyreparte.security.config.JwtAuthenticationFilter;
-import com.grupo2.parteyreparte.services.InteractionService;
 import com.grupo2.parteyreparte.services.ProductService;
 import com.grupo2.parteyreparte.services.StatsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +31,7 @@ class ProductControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private InteractionService interactionService;
+    private StatsService statsService;
 
     @MockBean
     private ProductService productService;

@@ -1,23 +1,20 @@
 package com.grupo2.parteyreparte.services;
 
 import com.grupo2.parteyreparte.models.Interaction;
-import com.grupo2.parteyreparte.repositories.mongo.StatsRepository;
+import com.grupo2.parteyreparte.repositories.redis.StatsRedisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service
 public class StatsService {
-
-    private final StatsRepository statsRepository;
     private final ProductService productService;
+    private final StatsRedisRepository statsRedisRepository;
 
     @Autowired
-    public StatsService(StatsRepository statsRepository, ProductService productService, UserService userService) {
+    public StatsService(ProductService productService, UserService userService, StatsRedisRepository statsRedisRepository) {
         this.productService = productService;
-        this.statsRepository = statsRepository;
+        this.statsRedisRepository = statsRedisRepository;
     }
 
     public Integer getPublicationsCount(){
@@ -26,25 +23,17 @@ public class StatsService {
     }
 
     public Integer getUniqueUsersCount(){
-        Long uniqueUsersCount = statsRepository.countUniqueUsers();
-        return uniqueUsersCount != null ? Math.toIntExact(uniqueUsersCount) : 0;
+        return Math.toIntExact(statsRedisRepository.getCounter(Interaction.InteractionType.NEW_USER));
     }
 
-    public Integer getAmountInteractions() {
-        return Math.toIntExact(statsRepository.count());
+    public Integer getAmountProducts() {
+        Long productsCount = statsRedisRepository.getCounter(Interaction.InteractionType.PRODUCT_CREATION);
+        return productsCount != null ? Math.toIntExact(productsCount) : 0;
     }
 
-    public List<Interaction> getAll() {
-        return statsRepository.findAll();
+    public void addInteraction(Interaction.InteractionType interactionType) {
+        statsRedisRepository.incrementCounter(interactionType);
     }
 
 
-    public void addInteraction(Interaction interaction) {
-        statsRepository.save(interaction);
-
-    }
-
-    public void addInteractions(List<Interaction> interactions) {
-        statsRepository.saveAll(interactions);
-    }
 }

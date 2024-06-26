@@ -20,7 +20,7 @@ public class Interaction {
     private String userId;
     public enum InteractionType {
         PRODUCT_CREATION,
-        PRODUCT_SUBSCRIPTION
+        NEW_USER
     }
 
     private LocalDateTime timestamp;

@@ -4,6 +4,7 @@ import com.grupo2.parteyreparte.dtos.AuthRequestDTO;
 import com.grupo2.parteyreparte.dtos.AuthResponseDTO;
 import com.grupo2.parteyreparte.dtos.RegisterRequestDTO;
 import com.grupo2.parteyreparte.exceptions.AuthException;
+import com.grupo2.parteyreparte.models.Interaction;
 import com.grupo2.parteyreparte.models.User;
 import com.grupo2.parteyreparte.repositories.mongo.UserRepository;
 import com.grupo2.parteyreparte.security.service.JwtService;
@@ -27,6 +28,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PasswordValidator passwordValidator;
+    private final StatsService statsService;
 
 
     /***
@@ -55,6 +57,7 @@ public class AuthService {
                         .build();
 
         userRepository.save(user);
+        statsService.addInteraction(Interaction.InteractionType.NEW_USER);
 
         String jwtToken = jwtService.generateToken(user);
 
