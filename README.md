@@ -23,7 +23,7 @@ Y en la carpeta /src/main/ui hay que copiar el archivo .env.local. O pueden conf
 * En la carpeta raiz del proyecto ejecutar el comando de docker ("docker compose up -d --build")
 * Ubicarse en la carpeta /src/main/ui y correr npm run dev
 
-#### Configuración de .env (Ruta: "/src/main/resources")
+#### Configuración de .env
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
@@ -41,7 +41,7 @@ Puedes generar tu base64 key de 32 Bytes [Acá](https://generate.plus/en/base64)
 | :-------- | :------- | :------------------------- |
 | `NEXTAUTH_SECRET` | `string` | **Requerido**. Clave para que utilice Next |
 | `NEXTAUTH_URL` | `string` | **Requerido**. Ruta del dominio donde se encuentra el servidor frontend |
-| `NEXT_PUBLIC_BACKEND_INTERNAL_URL` | `string` | **Requerido**. Ruta de la base de datos 
+| `NEXT_PUBLIC_BACKEND_INTERNAL_URL` | `string` | **Requerido**. Ruta del backend 
 
 
 
