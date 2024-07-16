@@ -51,9 +51,11 @@ services:
     build:
       context: src/main/ui
       dockerfile: Dockerfile
+      args:
+        - NEXTAUTH_SECRET=adsfasdfasdfasdf
+        - NEXTAUTH_URL=http://${FRONT_URL:-host.docker.internal}:3000/
+        - NEXT_PUBLIC_BACKEND_INTERNAL_URL=${BACKEND_URL:-host.docker.internal}
     ports:
       - "3000:3000"
-    env_file:
-      - ./src/main/ui/.env.local
     depends_on:
       - app-server
