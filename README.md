@@ -12,16 +12,16 @@ _Descargar repositorio mediante git_
 ### Pre-requisitos 📋
 
 * Docker
-* Archivo de configuración .env y .env.local
+* Archivo de configuración .env
 
 
 ## Despliegue 📦
 
-* Es necesario copiar los archivos .env y .env.local que mandamos por privado.
+* Es necesario copiar los archivos .env que mandamos por privado.
 El archivo .env hay que copiarlo en la raiz del proyecto
-Y en la carpeta /src/main/ui hay que copiar el archivo .env.local. O pueden configurarlo ustedes mismos.
+Si desean levantar el frontend aparte, en la carpeta /src/main/ui hay que crear el archivo .env.local con los parametros que se encuentran en el cuadro que se encuentra más adelante
 * En la carpeta raiz del proyecto ejecutar el comando de docker ("docker compose up -d --build")
-* Ubicarse en la carpeta /src/main/ui y correr npm run dev
+* Ubicarse en la carpeta /src/main/ui y correr npm run dev (En caso de correr solo frontend)
 
 #### Configuración de .env
 
@@ -31,6 +31,11 @@ Y en la carpeta /src/main/ui hay que copiar el archivo .env.local. O pueden conf
 | `DB_MONGO_HOST` | `string` | **Requerido**. Ruta de la base de datos |
 | `DB_MONGO_USERNAME` | `string` | **Requerido**. Usuario en la base de datos |
 | `DB_MONGO_PASSWORD` | `string` | **Requerido**. Contraseña de la base de datos |
+| `REDIS_HOST` | `string` | **Requerido**. Ruta de la base de datos redis|
+| `REDIS_PORT` | `string` | **Requerido**. Puerto de la base de datos redis|
+| `REDIS_PASSWORD` | `string` | **Requerido**. Contraseña de la base de datos redis |
+| `FRONT_URL` | `string` | **Opcional**. Dirección del servidor frontend |
+| `BACKEND_URL` | `string` | **Opcional**. Dirección dle servidor backend |
 
 Puedes generar tu base64 key de 32 Bytes [Acá](https://generate.plus/en/base64)
 
